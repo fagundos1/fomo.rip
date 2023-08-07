@@ -1,0 +1,91 @@
+{% load i18n %}
+<div class="popup" id="feedback">
+    <p class="popup__caption">{% trans "Confirm completion of the transaction" %}</p>
+    <p class="popup__subcaption">{% trans "Please give your feedback to the seller" %}</p>
+    <div class="popup__form">
+        <div class="set-rating">
+            <input class="js-feedback-rating" type="hidden" value="0">
+            <fieldset class="rating-fieldset">
+                <svg style="position: absolute; width: 0; height: 0; overflow: hidden" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <symbol id="star" viewBox="0 0 12 12" preserveAspectRatio="xMaxYMax meet">
+                        <title>Star Rating</title>
+                        <path d="M6.00005 9.51333L8.76671 11.1867C9.27338 11.4933 9.89338 11.04 9.76005 10.4667L9.02672 7.32L11.4734 5.2C11.92 4.81333 11.68 4.08 11.0934 4.03333L7.87338 3.76L6.61338 0.786668C6.38671 0.246668 5.61338 0.246668 5.38671 0.786668L4.12671 3.75333L0.906715 4.02667C0.320048 4.07333 0.0800484 4.80667 0.526715 5.19333L2.97338 7.31333L2.24005 10.46C2.10672 11.0333 2.72671 11.4867 3.23338 11.18L6.00005 9.51333Z"/>
+                    </symbol>
+                </svg>
+                <span>
+                    <input type="checkbox" id="star5" class="rating-checkbox" value="5" name="star">
+                    <label class="full" for="star5" title="Awesome - 5 stars">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>
+                    </label>
+                    <input type="checkbox" id="star4half" class="rating-checkbox" value="4.5" name="star">
+                    <label class="half" for="star4half" title="Pretty good - 4.5 stars" name="star">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>                                 
+                    </label>
+                </span>
+                <span>
+                    <input type="checkbox" id="star4" class="rating-checkbox" value="4" name="star">
+                    <label class="full" for="star4" title="Pretty good - 4 stars">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>
+                    </label>
+                    <input type="checkbox" id="star3half" class="rating-checkbox" value="3.5" name="star">
+                    <label class="half" for="star3half" title="Meh - 3.5 stars">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>                                
+                    </label>
+                </span>
+                <span>
+                    <input type="checkbox" id="star3" class="rating-checkbox" value="3" name="star"><label class="full" for="star3" title="Meh - 3 stars" name="star">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>
+                    </label>
+                    <input type="checkbox" id="star2half" class="rating-checkbox" value="2.5" name="star">
+                    <label class="half" for="star2half" title="Kinda bad - 2.5 stars">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>                                  
+                    </label>
+                </span>
+                <span>
+                    <input type="checkbox" id="star2" class="rating-checkbox" value="2" name="star">
+                    <label class="full" for="star2" title="Kinda bad - 2 stars">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>
+                    </label>
+                    <input type="checkbox" id="star1half" class="rating-checkbox" value="1.5" name="star">
+                    <label class="half" for="star1half" title="Meh - 1.5 stars">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>                                   
+                    </label>
+                </span>
+                <span>
+                    <input type="checkbox" id="star1" class="rating-checkbox" value="1" name="star">
+                    <label class="full" for="star1" title="Sucks big time - 1 star">
+                        <svg role="img" aria-label="rating">
+                            <use xlink:href="#star"></use>
+                        </svg>
+                    </label>
+                    <input type="checkbox" id="starhalf" class="rating-checkbox" value="0.5" name="star">
+                    <label class="half" for="starhalf" title="Sucks big time - 0.5 stars">
+                        <svg role="img" aria-label="rating"> 
+                            <use xlink:href="#star"></use>
+                        </svg>
+                    </label>
+                </span>
+            </fieldset>
+        </div>
+        <div class="input-container">
+            <textarea class="js-feedback-details" placeholder="Your comment..."></textarea>
+        </div>
+        <button class="btn js-buyer-complete" data-chain-id="{{ deal.offer.get_chain_id }}" data-escrow-addr="{{ deal.offer.get_escrow_addr }}" data-deal="{{ deal.pk }}" data-deal-hash="{{ deal.hash_id }}">{% trans "Confirm" %}</button>
+    </div>
+</div>

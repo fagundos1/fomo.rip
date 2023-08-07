@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% block main %}
+<section class="form request-form">
+    <div class="content">
+        <div class="form__caption">
+            <h1>{% trans "Adding an offer" %}</h1>
+            <h2>{% trans "Fill in the fields to create a new request" %}</h2>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form__input-block{% if form.name.errors %} form__input-block--invalid{% endif %}">
+                {{ form.name }}
+                <label for="id_name">{% trans "Name" %}</label>
+                {% if form.name.errors %}<p class="errorlist">
+                {% for error in form.name.errors %}{{ error }}<br>{% endfor %}
+                </p>{% endif %}
+            </div>
+            <div class="form__input-line">
+                <div class="form__input-block{% if form.max_price.errors %} form__input-block--invalid{% endif %}">
+                    {{ form.max_price }}
+                    <label for="id_price">{% trans "Maximum price" %}</label>
+                    <p class="input-container__hint"><span>({% trans "min" %} {{ settings.MIN_PRICE  }}$)</span></p>
+                    {% if form.max_price.errors %}<p class="errorlist">
+                    {% for error in form.max_price.errors %}{{ error }}<br>{% endfor %}
+                    </p>{% endif %}
+                </div>
+            </div>
+            <button type="submit" class="btn">{% trans "Add request" %}</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

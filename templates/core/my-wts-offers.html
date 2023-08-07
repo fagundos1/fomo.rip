@@ -1,0 +1,330 @@
+{% extends 'layouts/base.html' %}
+{% load thumbnail stars core_tags static i18n %}
+{% block main %}
+<section class="profile">
+    <div class="content">
+        <div class="profile__user-info">
+            {% if account.avatar %}
+            {% thumbnail account.avatar.image "130x130" crop="center" as thumb %}
+            <img src="{{ thumb.url }}">
+            {% endthumbnail %}
+            {% else %}
+            <img src="{% static 'img/no-avatar.jpg' %}" alt="">
+            {% endif %}
+            <p{% if account.is_long_name %} title="{{ account.full_name }}"{% endif %}>{{ account }}</p>
+            <div class="profile__user-registered">
+                <div class="profile__user-registered-icon">{% include "include/svg/calendar.html" %}</div>
+                <div class="profile__user-registered-title">{% trans "Registered on" %} {{ account.created_at|date:'d.m.Y' }}</div>
+            </div>
+            {% if account.rating.value > 0 %}
+            <div class="rating">
+                <span class="rating__number">{{ account.rating.value|floatformat }}</span>
+                {% starrating account.rating.value %}
+            </div>
+            {% endif %}
+            <div class="social">
+                {% if account.twitter %}
+                <a href="https://twitter.com/{{ account.twitter }}" target="_blank">
+                    {% include "include/svg/twitter.html" %}
+                </a>
+                {% endif %}
+                {% if account.telegram %}
+                <a href="https://t.me/{{ account.telegram }}" target="_blank">
+                    {% include "include/svg/telegram.html" %}
+                </a>
+                {% endif %}
+                <a href="https://bscscan.com/address/{{ account.wallet }}" target="_blank" class="social--bscscan">
+                    {% include "include/svg/bscscan.html" %}
+                </a>
+            </div>
+        </div>
+        <div class="tabs">
+            <div class="tabs__choose">
+                <button data-tab="1" class="active">{% trans "WTS offers" %}</button>
+                <button data-tab="2">{% trans "Started deals" %}</button>
+                <button data-tab="3">{% trans "Closed deals" %}</button>
+                {% if account.sale_offers.rejected.count > 0 %}
+                <button data-tab="4">{% trans "Rejected offers" %}</button>
+                {% endif %}
+            </div>
+            <div class="tabs__container">
+                <div class="tab" data-tab="1">
+                    {% with offers=account.sale_offers.active_or_moderation %}
+                    {% if offers|length > 0 %}
+                    <div class="table table_my-profile{% if offers|length > 5 %} table--h420{% endif %}">
+                        <div class="table__head">
+                            <div class="table__row">
+                                <div class="table__col">{% trans "Name" %}</div>
+                                <div class="table__col">{% trans "User" %}</div>
+                                <div class="table__col">{% trans "Price" %}</div>
+                                <div class="table__col">{% trans "Status" %}</div>
+                                <div class="table__col"></div>
+                            </div>
+                        </div>
+                        <div class="table__body" ss-container>
+                            {% for offer in offers %}
+                            <div class="table__row">
+                                <div class="table__col table__col--name"><span{% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}>{{ offer }}</span></div>
+                                <div class="table__col">
+                                    <div class="user-info">
+                                        {% if account.avatar %}
+                                        {% thumbnail account.avatar.image "30x30" crop="center" as thumb %}
+                                        <img src="{{ thumb.url }}">
+                                        {% endthumbnail %}
+                                        {% else %}
+                                        <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                                        {% endif %}
+                                        <div>
+                                            <span{% if offer.seller.is_long_name %} title="{{ offer.seller.full_name }}"{% endif %}>{{ offer.seller }}</span>
+                                            {% if offer.seller.rating.value > 0  %}
+                                            <div class="rating">
+                                                <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                                                {% starrating offer.seller.rating.value %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table__col"><span class="price">{{ offer.price|priceformat }}$</span></div>
+                                <div class="table__col table__col--{{ offer.status }}"><span class="table__status offer__status--{{ offer.status }}">{{ offer.get_status_display }}</span></div>
+                                <div class="table__col">
+                                    {% if not offer.is_locked %}
+                                    <a href="{% url 'core:edit_offer_page' offer.pk %}" class="btn">{% trans "Edit" %}</a>
+                                    <button class="btn btn_red" data-popup="delete" data-popup-redirect="{% url 'core:delete_offer' offer.pk %}">{% trans "Delete" %}</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="empty-offer">
+                        {% trans "You have no offers. You can create a new offer yourself." %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                    {% if account.is_active %}
+                    {% if account.is_profile_filled %}
+                    <button class="btn profile__addOffer" data-popup="addOffer">{% trans "Add offer" %}</button>
+                    {% else %}
+                    <button class="js-notify-fill-profile btn profile__addOffer">{% trans "Add offer" %}</button>
+                    {% endif %}
+                    {% else %}
+                    <button class="js-notify-blocked btn profile__addOffer">{% trans "Add offer" %}</button>
+                    {% endif %}
+                </div>
+                <div class="tab" data-tab="2">
+                    {% with offers=account.sale_offers.in_deal %}
+                    {% if offers|length > 0 %}
+                    <div class="table table_seller-profile{% if offers|length > 5 %} table--h420{% endif %}">
+                        <div class="table__head">
+                            <div class="table__row">
+                                <div class="table__col">{% trans "Name" %}</div>
+                                <div class="table__col">{% trans "User" %}</div>
+                                <div class="table__col">{% trans "Price" %}</div>
+                                <div class="table__col">{% trans "Status" %}</div>
+                                <div class="table__col"></div>
+                            </div>
+                        </div>
+                        <div class="table__body" ss-container>
+                            {% for offer in offers %}
+                            <div class="table__row">
+                                <div class="table__col"><span{% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}>{{ offer }}</span></div>
+                                <div class="table__col">
+                                    <div class="user-info">
+                                        {% if offer.seller.avatar %}
+                                        {% thumbnail offer.seller.avatar.image "30x30" crop="center" as thumb %}
+                                        <img src="{{ thumb.url }}">
+                                        {% endthumbnail %}
+                                        {% else %}
+                                        <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                                        {% endif %}
+                                        <div>
+                                            <span{% if offer.seller.is_long_name %} title="{{ offer.seller.full_name }}"{% endif %}>{{ offer.seller }}</span>
+                                            {% if offer.seller.rating.value %}
+                                            <div class="rating">
+                                                <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                                                {% starrating offer.seller.rating.value %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table__col"><span class="price">{{ offer.price|priceformat }}$</span></div>
+                                <div class="table__col"><span class="table__status deal__status--{{ offer.status }}">{{ offer.get_status_display }}</span></div>
+                                <div class="table__col">
+                                    <a href="{% url 'core:offer_page' offer.pk %}" class="btn">{% trans "Details" %}</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="empty-offer">
+                        {% trans "You have no started deals." %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="tab" data-tab="3">
+                    {% with offers=account.sale_offers.closed %}
+                    {% if offers|length > 0 %}
+                    <div class="table table_seller-profile{% if offers|length > 5 %} table--h420{% endif %}">
+                        <div class="table__head">
+                            <div class="table__row">
+                                <div class="table__col">{% trans "Name" %}</div>
+                                <div class="table__col">{% trans "User" %}</div>
+                                <div class="table__col">{% trans "Price" %}</div>
+                                <div class="table__col">{% trans "Status" %}</div>
+                                <div class="table__col"></div>
+                            </div>
+                        </div>
+                        <div class="table__body" ss-container>
+                            {% for offer in offers %}
+                            <div class="table__row">
+                                <div class="table__col"><span{% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}>{{ offer }}</span></div>
+                                <div class="table__col">
+                                    <div class="user-info">
+                                        {% if offer.seller.avatar %}
+                                        {% thumbnail offer.seller.avatar.image "30x30" crop="center" as thumb %}
+                                        <img src="{{ thumb.url }}">
+                                        {% endthumbnail %}
+                                        {% else %}
+                                        <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                                        {% endif %}
+                                        <div>
+                                            <span{% if offer.seller.is_long_name %} title="{{ offer.seller.full_name }}"{% endif %}>{{ offer.seller }}</span>
+                                            {% if offer.seller.rating.value %}
+                                            <div class="rating">
+                                                <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                                                {% starrating offer.seller.rating.value %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table__col"><span class="price">{{ offer.price|priceformat }}$</span></div>
+                                <div class="table__col"><span class="table__status deal__status--{{ offer.status }}">{{ offer.get_status_display }}</span></div>
+                                <div class="table__col">
+                                    <a href="{% url 'core:offer_page' offer.pk %}" class="btn">{% trans "Details" %}</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="empty-offer">
+                        {% trans "You have no closed deals." %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% if account.sale_offers.rejected.count > 0 %}
+                <div class="tab" data-tab="4">
+                    {% with offers=account.sale_offers.rejected %}
+                    <div class="table table_seller-profile{% if offers|length > 5 %} table--h420{% endif %}">
+                        <div class="table__head">
+                            <div class="table__row">
+                                <div class="table__col">{% trans "Name" %}</div>
+                                <div class="table__col">{% trans "User" %}</div>
+                                <div class="table__col">{% trans "Price" %}</div>
+                                <div class="table__col">{% trans "Status" %}</div>
+                                <div class="table__col"></div>
+                            </div>
+                        </div>
+                        <div class="table__body" ss-container>
+                            {% for offer in offers %}
+                            <div class="table__row">
+                                <div class="table__col"><span{% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}>{{ offer }}</span></div>
+                                <div class="table__col">
+                                    <div class="user-info">
+                                        {% if offer.seller.avatar %}
+                                        {% thumbnail offer.seller.avatar.image "30x30" crop="center" as thumb %}
+                                        <img src="{{ thumb.url }}">
+                                        {% endthumbnail %}
+                                        {% else %}
+                                        <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                                        {% endif %}
+                                        <div>
+                                            <span{% if offer.seller.is_long_name %} title="{{ offer.seller.full_name }}"{% endif %}>{{ offer.seller }}</span>
+                                            {% if offer.seller.rating.value %}
+                                            <div class="rating">
+                                                <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                                                {% starrating offer.seller.rating.value %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table__col"><span class="price">{{ offer.price|priceformat }}$</span></div>
+                                <div class="table__col"><span class="table__status deal__status--{{ offer.status }}">{{ offer.get_status_display }}</span></div>
+                                <div class="table__col"> </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endwith %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% with feedbacks=account.received_feedbacks.all %}
+        <div class="reviews">
+            <p class="reviews__caption">{% trans "Reviews" %}</p>
+            <div class="review">
+                <div class="seller-badge">
+                    <div class="seller-badge__number-row">
+                        <span class="seller-badge__number">{{ account.num_success_deals }}</span> {% include "include/svg/seller-badge-completed.svg" %}
+                    </div>
+                    <div class="seller-badge__label">{% trans "Completed deals" %}</div>
+                </div>
+                <div class="seller-badge">
+                    <div class="seller-badge__number-row">
+                        <span class="seller-badge__number">{{ account.num_cancelled_deals }}</span> {% include "include/svg/seller-badge-cancelled.svg" %}
+                    </div>
+                    <div class="seller-badge__label">{% trans "Cancelled deals" %}</div>
+                </div>
+            </div>
+            {% for review in feedbacks %}
+            <div class="review">
+                {% if review.account.avatar %}
+                {% thumbnail review.account.avatar.image "30x30" crop="center" as thumb %}
+                <img src="{{ thumb.url }}">
+                {% endthumbnail %}
+                {% else %}
+                <img src="{% static 'img/no-avatar.jpg' %}" alt="">
+                {% endif %}
+                <div class="review__content">
+                    <a href="{% url 'core:profile_page' review.account.name %}" class="review__name">{{ review.account }}</a>
+                    {% if review.account.rating.value > 0 %}
+                    <div class="rating">
+                        <span class="rating__number">{{ review.account.rating.value|floatformat }}</span>
+                        {% starrating review.account.rating.value %}
+                    </div>
+                    {% endif %}
+                    <p class="review__text">{{ review.details|default:'' }}</p>
+                </div>
+                <div class="review__info">
+                    <p class="review__date">{{ review.created_at|date:'d.m.Y' }}</p>
+                    <div class="rating">
+                        <span class="rating__number">{{ review.rating|floatformat }}</span>
+                        {% starrating review.rating %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endwith %}
+    </div>
+</section>
+
+<div class="popup" id="delete">
+    <img src="{% static 'img/warning-img.png' %}" alt="">
+    <p class="popup__caption">{% trans "Are you sure you want to delete?" %}</p>
+    <p class="popup__subcaption">{% trans "Do you really want to delete this offer?" %}</p>
+    <div class="btn-line">
+        <button class="btn btn_light js-close-popup">{% trans "Cancel" %}</button>
+        <button class="btn btn_red js-confirm-button">{% trans "Delete" %}</button>
+    </div>
+</div>
+{% endblock %}

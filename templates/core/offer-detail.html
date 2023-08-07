@@ -1,0 +1,326 @@
+{% extends 'layouts/base.html' %}
+{% load thumbnail stars core_tags static i18n %}
+{% block main %}
+<section class="deal _seller">
+    <div class="content deal__container js-deal" data-deal-pk="{{ object.pk }}"{% if is_watch_deal_stage %} data-deal-stage="{{ object.deal_stage_number }}"{% endif %}>
+        <div class="deal__content">
+            <div class="deal__header">
+                <div class="user-info">
+                    {% if object.seller.avatar %}
+                    {% thumbnail object.seller.avatar.image "30x30" crop="center" as thumb %}
+                    <img src="{{ thumb.url }}">
+                    {% endthumbnail %}
+                    {% else %}
+                    <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                    {% endif %}
+                    <div>
+                        <p><a href="{% url 'core:profile_page' object.seller.name %}"{% if object.seller.is_long_name %} title="{{ object.seller.full_name }}"{% endif %}>{{ object.seller }}</a></p>
+                        {% if object.seller.rating.value > 0 %}
+                        <div class="rating">
+                            <span class="rating__number">{{ object.seller.rating.value|floatformat }}</span>
+                            {% starrating object.seller.rating.value %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="social">
+                    {% if object.seller.twitter %}
+                    <a href="https://twitter.com/{{ object.seller.twitter }}" target="_blank">
+                        {% include "include/svg/twitter.html" %}
+                    </a>
+                    {% endif %}
+                    {% if object.seller.telegram %}
+                    <a href="https://t.me/{{ object.seller.telegram }}" target="_blank">
+                        {% include "include/svg/telegram.html" %}
+                    </a>
+                    {% endif %}
+                    {% if object.seller.wallet %}
+                    <a href="https://bscscan.com/address/{{ object.seller.wallet }}" target="_blank" class="social--bscscan">
+                        {% include "include/svg/bscscan.html" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <p class="deal__name-block">
+                <span{% if object.is_long_name %} title="{{ object.name }}"{% endif %}>{{ object }}</span>
+                <span class="deal__name-block-favorites">
+                    <a class="js-toggle-favorite {% if is_in_favorites %}active{% endif %}" data-url="{% url "core:toggle_favorite" object.pk %}">
+                        {% if is_in_favorites %}
+                        {% include "include/svg/heart-in-circle-fill.html" %}
+                        {% else %}
+                        {% include "include/svg/heart-in-circle.html" %}
+                        {% endif %}
+                    </a>
+                </span>
+            </p>
+            <div class="deal__specs">
+                <div class="deal__specs__spec">
+                    {% if object.deal_stage_number > 2 %}
+                    {% include "include/svg/check.html" %}
+                    {% else %}
+                    {% include "include/svg/clock.html" %}
+                    {% endif %}
+                    <p>{% trans "Price" %}: <span>{{ object.price|priceformat }}$</span></p>
+                </div>
+                <div class="deal__specs__spec">
+                    {% if object.deal_stage_number > 3 %}
+                    {% include "include/svg/check.html" %}
+                    {% else %}
+                    {% include "include/svg/clock.html" %}
+                    {% endif %}
+                    <p>{% trans "Deposit" %}: <span>{{ object.collateral|priceformat }}$</span></p>
+                </div>
+                <div class="deal__specs__spec deal__specs__spec--network">
+                    {% if object.network == 'bnb' %}
+                    {% include "include/svg/networks/network_bnb.html" %}
+                    {% elif object.network == 'arbitrum' %}
+                    {% include "include/svg/networks/network_arbitrum.html" %}
+                    {% elif object.network == 'optimism' %}
+                    {% include "include/svg/networks/network_optimism.html" %}
+                    {% endif %}
+                    <p><span>{{ object.render_token_name }}</span></p>
+                </div>
+            </div>
+            {% if object.details %}
+            <p class="deal__caption">{% trans "Details" %}</p>
+            <p class="deal__text">{{ object.details|fix_long_words|safe }}</p>
+            {% endif %}
+            {% if auth.is_authenticated %}
+                {% if is_show_confirmation %}
+                <div class="deal__terms-line">
+                    {% if auth.account.is_profile_filled %}
+                    <div class="fake-checkbox" data-popup="rules">
+                        <label><span></span><a>{% trans "Confirm details" %}</a></label>
+                    </div>
+                    {% else %}
+                    <div class="js-notify-fill-profile fake-checkbox">
+                        <label><span></span><a>{% trans "Confirm details" %}</a></label>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% comment %}
+                {% if object.deal_stage_number == 1 %}
+                <div class="deal__btns">
+                    <button class="btn btn_red" data-popup="cancel">Cancel the deal</button>
+                </div>
+                {% endif %}
+                {% endcomment %}
+                {% if object.deal_stage_number == 2 and not is_seller %}
+                <div class="deal__terms-line">
+                    <div class="checkbox">
+                        <input type="checkbox" name="checkbox2" id="checkbox2" checked disabled>
+                        <label for="checkbox2"><span></span>{% trans "You have accepted the terms" %}</label>
+                    </div>
+                    {% if not object.current_deal.is_buyer_deposited %}
+                        {% if object.current_deal.is_buyer_approved %}
+                        <button class="btn js-buyer-deposit" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-deal="{{ object.current_deal.pk }}">{% trans "Buy" %}</button>
+                        {% else %}
+                        <button class="btn js-buyer-approve" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-token-decimals="{{ object.get_token_decimals }}" data-token-addr="{{ object.get_token_addr }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-amount="{{ object.price|priceformat }}" data-deal="{{ object.current_deal.pk }}">Approve {{ object.render_token_name }}</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% if object.deal_stage_number == 3 %}
+                <div class="deal__terms-line">
+                    <div class="checkbox">
+                        <input type="checkbox" name="checkbox2" id="checkbox2" checked disabled>
+                        <label for="checkbox2"><span></span>{% trans "You have accepted the terms" %}</label>
+                    </div>
+                </div>
+                <div class="deal__btns">
+                    <button class="btn btn_red" data-popup="cancel">{% trans "Cancel the deal" %}</button>
+                    {% if is_seller and not object.current_deal.is_seller_deposited %}
+                        {% if object.current_deal.is_seller_approved %}
+                        <button class="btn js-seller-collateral" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-deal-hash="{{ object.current_deal.hash_id }}" data-deal="{{ object.current_deal.pk }}">Deposit collateral</button>
+                        {% else %}
+                        <button class="btn js-seller-approve" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-token-decimals="{{ object.get_token_decimals }}" data-token-addr="{{ object.get_token_addr }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-amount="{{ object.collateral|priceformat }}" data-deal="{{ object.current_deal.pk }}">Approve {{ object.render_token_name }}</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="deal__hint">{% trans "You can stop a trade at any time. In this case, all funds will be returned." %}</div>
+                {% endif %}
+                {% if object.deal_stage_number == 4 %}
+                <div class="deal__btns">
+                    <button class="btn btn_red" data-popup="cancel">{% trans "Cancel the deal" %}</button>
+                    {% if not is_seller and not object.current_deal.is_completion_delay %}
+                    <button class="btn" data-popup="feedback">{% trans "Complete the deal" %}</button>
+                    {% endif %}
+                </div>
+                <div class="deal__hint">{% trans "You can stop a trade at any time. In this case, all funds will be returned." %}</div>
+                {% endif %}
+                {% if object.deal_stage_number == 5 and is_seller %}
+                <div class="deal__btns">
+                    {% if not object.current_deal.is_confirmed_finish %}
+                    <button class="btn js-seller-complete-claim" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-deal-hash="{{ object.current_deal.hash_id }}" data-deal="{{ object.current_deal.pk }}">Claim the money</button>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% if object.current_deal.is_waiting_buyer_claim and not is_seller %}
+                <div class="deal__btns">
+                    <button class="btn js-buyer-cancelation-claim" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-deal-hash="{{ object.current_deal.hash_id }}" data-deal="{{ object.current_deal.pk }}">Claim the money</button>
+                </div>
+                {% endif %}
+                {% comment %}
+                {% if object.current_deal.is_waiting_seller_claim and is_seller %}
+                <div class="deal__btns">
+                    <button class="btn js-seller-arbitrage-claim" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-deal-hash="{{ object.current_deal.hash_id }}" data-deal="{{ object.current_deal.pk }}">Claim the money</button>
+                </div>
+                {% endif %}
+                {% endcomment %}
+                {% if object.current_deal.is_waiting_sides_claim or object.current_deal.has_unclaimed_arbitration %}
+                <div class="deal__btns">
+                {% if is_seller %}
+                    {% if object.current_deal.is_seller_claim_allowed and not object.current_deal.is_seller_claimed_after_arbitrage %}
+                    <button class="btn js-seller-arbitrage-claim" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-deal-hash="{{ object.current_deal.hash_id }}" data-deal="{{ object.current_deal.pk }}">Claim the money</button>
+                    {% endif %}
+                {% else %}
+                    {% if object.current_deal.is_buyer_claim_allowed and not object.current_deal.is_buyer_claimed_after_arbitrage %}
+                    <button class="btn js-buyer-arbitrage-claim" data-chain-id="{{ object.get_chain_id }}" data-token-name="{{ object.render_token_name }}" data-escrow-addr="{{ object.get_escrow_addr }}" data-deal-hash="{{ object.current_deal.hash_id }}" data-deal="{{ object.current_deal.pk }}">Claim the money</button>
+                    {% endif %}
+                {% endif %}
+                </div>
+                {% endif %}
+                {% if object.current_deal.is_closed and object.seller == auth.account and not object.current_deal|has_feedback_for:object.buyer %}
+                <div class="deal__btns">
+                    <button class="btn js-feedback" data-popup="feedback-close">{% trans "Feedback for buyer" %}</button>
+                </div>
+                {% endif %}
+                {% if object.current_deal.is_closed and object.buyer == auth.account and not object.current_deal|has_feedback_for:object.seller %}
+                <div class="deal__btns">
+                    <button class="btn js-feedback" data-popup="feedback-close">{% trans "Feedback for seller" %}</button>
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% if auth.is_authenticated %}
+        <div class="deal__progress">
+            <div class="deal__progress__box">
+                <div class="progress"></div>
+                {% if not object.is_canceled %}
+                <div class="deal__progress__block _completed">
+                    <div class="icon">
+                    {% include "include/svg/stack.html" %}
+                    </div>
+                    <p class="caption">{% trans "Open" %}</p>
+                    {% if object.deal_stage_number == 0 %}
+                    <p class="text">{% trans "Offer open for new deals" %}</p>
+                    {% endif %}
+                </div>
+                <div class="deal__progress__block {% if object.deal_stage_number > 0 %}_completed{% else %}_current{% endif %}">
+                    <div class="icon">
+                        {% include "include/svg/puzzle.html" %}
+                    </div>
+                    <p class="caption">{% trans "In progress" %}</p>
+                </div>
+                <div class="deal__progress__block{% if object.deal_stage_number > 0 %} {% if object.deal_stage_number == 1 %}_current{% else %}_completed{% endif %}{% endif %}">
+                    <div class="icon">
+                        {% include "include/svg/solid-check.html" %}
+                    </div>
+                    <p class="caption">{% trans "Waiting for seller to accept" %}</p>
+                    {% if object.deal_stage_number == 1 %}
+                    <p class="time js-countdown" data-seconds="{{ object.current_deal.expires|timediff_seconds }}">{{ object.current_deal.expires|timediff }}</p>
+                    <p class="text">{% trans "Waiting when seller accept the rules of deal" %}</p>
+                    {% endif %}
+                </div>
+                <div class="deal__progress__block{% if object.deal_stage_number > 1 %} {% if object.deal_stage_number == 2 %}_current{% else %}_completed{% endif %}{% endif %}">
+                    <div class="icon">
+                        {% include "include/svg/wallet.html" %}
+                    </div>
+                    <p class="caption">{% trans "Waiting for buyer payment" %}</p>
+                    {% if object.deal_stage_number == 2 %}
+                    <p class="time js-countdown" data-seconds="{{ object.current_deal.expires|timediff_seconds }}">{{ object.current_deal.expires|timediff }}</p>
+                    <p class="text">{% trans "Waiting when buyer will pay the deal" %}</p>
+                    {% endif %}
+                </div>
+                <div class="deal__progress__block{% if object.deal_stage_number > 2 %} {% if object.deal_stage_number == 3 %}_current{% else %}_completed{% endif %}{% endif %}">
+                    <div class="icon">
+                        {% include "include/svg/wallet.html" %}
+                    </div>
+                    <p class="caption">{% trans "Waiting for seller deposit" %}</p>
+                    {% if object.deal_stage_number == 3 %}
+                    <p class="time js-countdown" data-seconds="{{ object.current_deal.expires|timediff_seconds }}">{{ object.current_deal.expires|timediff }}</p>
+                    <p class="text">{% trans "Waiting for the seller to make a deposit" %}</p>
+                    {% endif %}
+                </div>
+                <div class="deal__progress__block{% if object.deal_stage_number > 3 %} {% if object.deal_stage_number == 4 %}_current{% else %}_completed{% endif %}{% endif %}">
+                    <div class="icon">
+                        {% include "include/svg/completed.html" %}
+                    </div>
+                    <p class="caption">{% trans "Waiting for completion" %}</p>
+                    {% if object.deal_stage_number == 4 %}
+                    {% if object.current_deal.is_completion_delay %}
+                    <p class="time js-countdown" data-seconds="{{ object.current_deal.expires|timediff_seconds }}">{{ object.current_deal.expires|timediff }}</p>
+                    {% endif %}
+                    <p class="text">{% trans "Waiting when deal will be finished" %}</p>
+                    {% endif %}
+                </div>
+                <div class="deal__progress__block{% if object.deal_stage_number == 5 %} _current{% endif %}{% if object.deal_stage_number == 6 %} _completed{% endif %}">
+                    <div class="icon">
+                        {% include "include/svg/completed.html" %}
+                    </div>
+                    <p class="caption">{% trans "Completed" %}</p>
+                </div>
+                {% else %}
+                <div class="deal__progress__block _completed">
+                    <div class="icon">
+                        {% include "include/svg/stack.html" %}
+                    </div>
+                    <p class="caption">{% trans "Open" %}</p>
+                </div>
+                <div class="deal__progress__block _completed">
+                    <div class="icon">
+                        {% include "include/svg/puzzle.html" %}
+                    </div>
+                    <p class="caption">{% trans "Waiting for seller to accept" %}</p>
+                </div>
+                <div class="deal__progress__block _completed">
+                    <div class="icon">
+                        {% include "include/svg/wallet.html" %}
+                    </div>
+                    <p class="caption">{% trans "Waiting for payment" %}</p>
+                </div>
+                <div class="deal__progress__block {% if object.is_closed %}_completed{% else %}_current{% endif %}">
+                    <div class="icon">
+                        {% if object.is_closed %}
+                        {% include "include/svg/check.html" %}
+                        {% else %}
+                        {% include "include/svg/clock.html" %}
+                        {% endif %}
+                    </div>
+                    <p class="caption">{% trans "Canceled" %}</p>
+                    {% if object.current_deal.is_waiting_buyer_claim %}
+                    <p class="text">{% trans "Waiting Buyer Claim" %}</p>
+                    {% endif %}
+                    {% if object.current_deal.is_waiting_moderator %}
+                    <p class="text">{% trans "Waiting Moderator" %}</p>
+                    {% endif %}
+                    {% if object.current_deal.is_waiting_sides_claim %}
+                    <p class="text">{% trans "Waiting Sides Claim" %}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="deal__help">
+                {% trans "Seller will not be able to receive payment until you confirm all obligations." %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% if auth.is_authenticated and is_show_confirmation %}
+{% include 'include/popup-deal-confirm.html' %}
+{% endif %}
+{% if object.deal_stage_number == 3 or object.deal_stage_number == 4 %}
+{% include 'include/popup-cancel.html' with is_seller=is_seller deal=object.current_deal is_payed=True %}
+{% endif %}
+{% if object.deal_stage_number == 4 and not is_seller and not object.current_deal.is_completion_delay %}
+{% include 'include/popup-feedback.html' with deal=object.current_deal %}
+{% endif %}
+{% if object.current_deal.is_closed and object.seller == auth.account and not object.current_deal|has_feedback_for:object.buyer %}
+{% include 'include/popup-feedback-close.html' with offer=object account=auth.account %}
+{% endif %}
+{% if object.current_deal.is_closed and object.buyer == auth.account and not object.current_deal|has_feedback_for:object.seller %}
+{% include 'include/popup-feedback-close.html' with offer=object account=auth.account %}
+{% endif %}
+{% endblock %}

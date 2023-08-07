@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="popup" id="rules">
+    <form action="{% url 'core:confirm_offer' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="offer" value="{{ object.pk }}">
+        <p class="popup__caption">{% trans "Agreement with the Terms." %}</p>
+        <div class="rules-popup__text">
+            <div ss-container>
+                {% blocktranslate %}
+                By accepting these rules, you agree to the basic points of the service terms: <br><br> 1. Fomorip provides a peer-to-peer web3 service that helps users discover and directly interact with each other and digital items available on crypto market. <br> 2. The following groups of digital goods and services are not subject to the deal: art; bots; soft; discord invites; courses and training; darknet services; KYC and any checks; other illegal. <br> 3. You bear full responsibility for verifying the identity, legitimacy, and authenticity of digital items that you purchase from third-party sellers using the Service and we make no claims about the identity, legitimacy, functionality, or authenticity of users or digital items (and any content associated with such Ndigital items) visible on the Service. <br><br> And also all other points listed in our Terms of Service.
+                {% endblocktranslate %}
+            </div>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" name="checkbox3" id="checkbox3" class="js-confirm-deal-rules">
+            <label for="checkbox3"><span></span>{% trans "I agree with the Terms." %}</label>
+        </div>
+        <button class="btn js-submit-confirm-deal" type="submit" disabled>{% trans "Confirm" %}</button>
+    </form>
+</div>

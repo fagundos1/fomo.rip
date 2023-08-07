@@ -1,0 +1,65 @@
+{% load i18n %}
+<div class="popup" id="addOffer">
+    <p class="popup__caption">{% trans "Adding an offer" %}</p>
+    <p class="popup__subcaption">{% trans "Fill in the fields to create a new offer" %}</p>
+    <form method="POST" #} class="form offer-form">
+        {% csrf_token %}
+        <div class="fake-select">
+            <select name="form_type" class="js-wts-wtb-form-type">
+                <option value="wts">WTS</option>
+                <option value="wtb">WTB</option>
+            <select>
+        </div>
+        <div class="fake-select">
+            <select name="offer_type">
+                <option value="nft">NFT</option>
+                <option value="ido">{% trans "Tokens" %}</option>
+                <option value="worker">{% trans "Workers" %}</option>
+                <option value="other">{% trans "Other" %}</option>
+            <select>
+        </div>
+        <div class="form__input-block">
+            <input id="id_name" type="text" name="name" required>
+            <label for="id_name">{% trans "Name" %}</label>
+        </div>
+        <div class="form__input-block">
+            <div class="fake-select fake-select--network fake-select--network-form">
+                <select name="network" required data-standart-arrow="1">
+                    <option value="bnb">BNB Chain</option>
+                    <option value="arbitrum">Arbitrum</option>
+                    <option value="optimism">Optimism</option>
+                <select>
+            </div>
+            <label for="id_name">{% trans "Network" %}</label>
+        </div>
+        <div class="form__input-line">
+            <div class="form__input-block">
+                <input id="id_price" type="number" step="any" name="price" required>
+                <label for="id_price">
+                    <i
+                        class="form__input-icon"
+                        data-tooltip="{% trans "The price of your offer. The commission of the service is taken from this amount." %}">
+                        {% include "include/svg/question.html" %}
+                    </i>
+                    {% trans "Price" %}
+                </label>
+                <p class="input-container__hint">fee {{ settings.FEE_PERCENT }}% <span>(min {{ settings.MIN_PRICE  }}$)</span></p>
+            </div>
+            <div class="form__input-block js-wts-wtb-collateral">
+                <input id="id_collateral" type="number" step="any" name="collateral" required>
+                <label for="id_collateral">
+                    <i
+                        class="form__input-icon"
+                        data-tooltip="{% trans "A deposit serves as collateral on the seller's side. Its amount depends on the potential risk of the buyer or the agreements of both parties to the deal." %}">
+                        {% include "include/svg/question.html" %}
+                    </i>
+                    {% trans "Deposit" %}
+                </label>
+            </div>
+        </div>
+        <div class="form__input-block js-wts-wtb-details">
+            <textarea name="details" placeholder="{% trans "Details of your offer..." %}"></textarea>
+        </div>
+        <button type="submit" class="btn js-wts-wtb-submit">{% trans "Add offer" %}</button>
+    </form>
+</div>

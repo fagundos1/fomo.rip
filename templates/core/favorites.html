@@ -1,0 +1,106 @@
+{% extends 'layouts/base.html' %}
+{% load thumbnail stars core_tags static i18n %}
+{% block main %}
+    <section class="profile">
+        <div class="content favorites__container">
+            <div class="profile__user-info">
+                {% if auth.account.avatar %}
+                {% thumbnail auth.account.avatar.image "130x130" crop="center" as thumb %}
+                <img src="{{ thumb.url }}">
+                {% endthumbnail %}
+                {% else %}
+                <img src="{% static 'img/no-avatar.jpg' %}" alt="">
+                {% endif %}
+                <p{% if auth.account.is_long_name %} title="{{ auth.account.full_name }}"{% endif %}>{{ auth.account }}</p>
+                {% if auth.account.rating.value > 0 %}
+                <div class="rating">
+                    <span class="rating__number">{{ auth.account.rating.value|floatformat }}</span>
+                    {% starrating auth.account.rating.value %}
+                </div>
+                {% endif %}
+                <div class="social">
+                    {% if auth.account.twitter %}
+                    <a href="https://twitter.com/{{ auth.account.twitter }}" target="_blank">
+                        {% include "include/svg/twitter.html" %}
+                    </a>
+                    {% endif %}
+                    {% if auth.account.telegram %}
+                    <a href="https://t.me/{{ auth.account.telegram }}" target="_blank">
+                        {% include "include/svg/telegram.html" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="tabs">
+                <div class="tabs__choose">
+                    <button data-tab="1" class="active">{% trans "My favorites" %} <span>({{ favorites|length }})</span></button>
+                </div>
+                <div class="tabs__container">
+                    <div class="tab" data-tab="1">
+                        {% if favorites|length > 0 %}
+                        <div class="table table_favorites{% if favorites|length > 5 %} table--h420{% endif %}">
+                            <div class="table__head">
+                                <div class="table__row">
+                                    <div class="table__col">{% trans "Name" %}</div>
+                                    <div class="table__col">{% trans "User" %}</div>
+                                    <div class="table__col">{% trans "Price" %}</div>
+                                    <div class="table__col">{% trans "Status" %}</div>
+                                    <div class="table__col"></div>
+                                    <div class="table__col"></div>
+                                </div>
+                            </div>
+                            <div class="table__body" ss-container>
+                                {% for favorite in favorites %}
+                                <div class="table__row">
+                                    {% with offer=favorite.offer %}
+                                    <div class="table__col table__col--name"><a href="{% url 'core:offer_page' offer.pk %}{% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}">{{ offer }}</a></div>
+                                    <div class="table__col">
+                                        <div class="user-info">
+                                            {% if offer.seller.avatar %}
+                                            {% thumbnail offer.seller.avatar.image "30x30" crop="center" as thumb %}
+                                            <img src="{{ thumb.url }}">
+                                            {% endthumbnail %}
+                                            {% else %}
+                                            <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                                            {% endif %}
+                                            <div>
+                                                <a href="{% url 'core:profile_page' offer.seller.name %}"{% if offer.seller.is_long_name %} title="{{ offer.seller.full_name }}"{% endif %}>{{ offer.seller }}</a>
+                                                {% if offer.seller.rating.value > 0  %}
+                                                <div class="rating">
+                                                    <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                                                    {% starrating offer.seller.rating.value %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table__col">
+                                        <span class="price">{{ offer.price|priceformat }}$</span>
+                                    </div>
+                                    <div class="table__col"><span class="table__status offer__status--{{ offer.status }}">{{ offer.get_status_display }}</span></div>
+                                    <div class="table__col">
+                                        {% if not offer.is_locked %}
+                                        <a href="{% url 'core:offer_page' offer.pk %}" class="btn">{% trans "Details" %}</a>
+                                        {% else %}
+                                        <button class="btn" disabled>{% trans "Details" %}</button>
+                                        {% endif %}
+                                    </div>
+                                    <div class="table__col">
+                                        <a class="link--gray" href="{% url 'core:remove_favorite' offer.pk %}">{% trans "Remove" %}</a>
+                                    </div>
+                                    {% endwith %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="empty-offer">
+                            {% trans "You have no favorites." %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

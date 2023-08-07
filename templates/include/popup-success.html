@@ -1,0 +1,9 @@
+{% load i18n %}
+<div class="popup popup--success" id="saveSuccess">
+    <p class="popup__caption">{% trans "Congratulations!" %}</p>
+    <div class="popup__success">
+        <div class="popup__success-icon">{% include "include/svg/success.html" %}</div>
+        <div class="popup__success-text">{% trans "Great! You have enabled notifications in the" %} <a href="javascript:void(0)">bot's Telegram</a> {% trans "about your offers and deals." %}</div>
+        <div class="popup__success-button"><a href="javascript:void(0)" class="btn js-close-popup">{% trans "Close" %}</a></div>
+    </div>
+</div>

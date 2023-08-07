@@ -1,0 +1,58 @@
+{% load thumbnail stars core_tags static i18n %}
+{% for offer in deals %}
+<div class="table__row{% if offer|has_changes_for:auth.account %} table__row--newchanges{% endif %}">
+    <div class="table__col table__col--name"><a class="link--nounder" href="{% url 'core:offer_page' offer.pk %}" {% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}>{{ offer }}</a></div>
+    <div class="table__col">
+        <div class="user-info">
+            {% if offer.seller.avatar %}
+            {% thumbnail offer.seller.avatar.image "30x30" crop="center" as thumb %}
+            <img src="{{ thumb.url }}">
+            {% endthumbnail %}
+            {% else %}
+            <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+            {% endif %}
+            <div>
+                <a href="{% url 'core:profile_page' offer.seller.name %}"{% if offer.seller.is_long_name %} title="{{ offer.seller.full_name }}"{% endif %}>{{ offer.seller }}</a>
+                {% if offer.seller.rating.value > 0  %}
+                <div class="rating">
+                    <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                    {% starrating offer.seller.rating.value %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="table__col">
+        <div class="user-info">
+            {% if offer.buyer.avatar %}
+            {% thumbnail offer.buyer.avatar.image "30x30" crop="center" as thumb %}
+            <img src="{{ thumb.url }}">
+            {% endthumbnail %}
+            {% else %}
+            <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+            {% endif %}
+            <div>
+                <a href="{% url 'core:profile_page' offer.buyer.name %}"{% if offer.buyer.is_long_name %} title="{{ offer.buyer.full_name }}"{% endif %}>{{ offer.buyer }}</a>
+                {% if offer.buyer.rating.value > 0  %}
+                <div class="rating">
+                    <span class="rating__number">{{ offer.buyer.rating.value|floatformat }}</span>
+                    {% starrating offer.buyer.rating.value %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="table__col"><p>{{ offer.get_offer_type_display }}</p></div>
+    <div class="table__col">
+        <span class="price">{{ offer.price|priceformat }}$</span>
+    </div>
+    <div class="table__col">
+        <span class="price">{{ offer.collateral|priceformat }}$</span>
+    </div>
+    <div class="table__col">
+        <span class="table__status offer__status--{{ offer.status }} my-deals-status--desktop">{{ offer.current_deal.get_status_display }}</span>
+        <span class="table__status offer__status--{{ offer.status }} my-deals-status--mobile" title="{{ offer.current_deal.get_status_display }}">{{ offer.current_deal.get_status_short }}</span>
+    </div>
+    {% if offer|has_changes_for:auth.account %}<div class="new-deals-badge">{% trans "New changes" %}</div>{% endif %}
+</div>
+{% endfor %}

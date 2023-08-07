@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Deal Params On Blockchain{% endblock %}
+{% block content %}
+<h1>Deal Params On Blockchain</h1>
+<ul>
+    <li><strong>Seller:</strong> {{ deal.seller }}</li>
+    <li><strong>Buyer:</strong> {{ deal.buyer }}</li>
+    <li><strong>Price:</strong> {{ deal.price }}</li>
+    <li><strong>Fee:</strong> {{ deal.fee }}</li>
+    <li><strong>Collateral:</strong> {{ deal.collateral }}</li>
+    <li><strong>Timestamp:</strong> {{ deal.timestamp }}</li>
+    <li><strong>Buyer Deposited:</strong> {{ deal.buyer_deposited }}</li>
+    <li><strong>Seller Deposited:</strong> {{ deal.seller_deposited }}</li>
+    <li><strong>Buyer Claim:</strong> {{ deal.buyer_claim }}</li>
+    <li><strong>Seller Claim:</strong> {{ deal.seller_claim }}</li>
+    <li><strong>Exists:</strong> {{ deal.exists }}</li>
+    <li><strong>Arbitration:</strong> {{ deal.arbitration }}</li>
+    <li><strong>Buyer Completed:</strong> {{ deal.buyer_completed }}</li>
+    <li><strong>Closed:</strong> {{ deal.closed }}</li>
+</li>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'layouts/base.html' %}
+{% load thumbnail static i18n %}
+{% block main %}
+<section class="settings">
+    <div class="content">
+        <form action="{% url 'core:settings_page' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% with avatar=auth.account.avatar %}
+            <div class="settings__header">
+                {% if avatar %}
+                {% thumbnail avatar.image "130x130" crop="center" as thumb %}
+                    <img class="js-thumbnail1" src="{{ thumb.url }}" alt="">
+                {% endthumbnail %}
+				{% else %}
+                    <img class="js-thumbnail1" src="{% static 'img/no-avatar.jpg' %}" alt="">
+                {% endif %}
+                <div class="settings__header__text">
+                    <p class="settings__header__text-title">
+                        {% trans "Profile settings" %}
+                        <a href="javascript:void(0)" class="btn btn_small btn_with-icon btn_orange btn_inactive btn_soon">{% trans "Premium" %} {% include "include/svg/crown.html" %}</a>
+                    </p>
+                    <span>{% trans "Update your photo and personal details" %}</span>
+                </div>
+            </div>
+            <div class="settings__block">
+                <div class="settings__block__text">
+                    <p class="js-theme-switcher-text">{% trans "Switch to" %} {% if auth.account.use_dark_theme %}{% trans "light" %}{% else %}{% trans "dark" %}{% endif %} {% trans "mode" %}</p>
+
+                </div>
+                <div class="settings__block__content">
+                    <div class="change__button-color-shema">
+                        <div class="dark__button-sema">
+                            <label class="switcher">
+                                <input type="checkbox" class="js-toggle-theme"{% if auth.account.use_dark_theme %} checked{% endif %}>
+                                <span class="switcher__field">
+                                    <span class="switcher__field-icon switcher__field-icon--light">{% include "include/svg/sun.html" %}</span>
+                                    <span class="switcher__field-icon switcher__field-icon--dark">{% include "include/svg/moon.html" %}</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings__block">
+                <div class="settings__block__text">
+                    <p><label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label></p>
+                    <span>{% trans "This information will be displayed on your profile" %}</span>
+                </div>
+                <div class="settings__block__content{% if form.name.errors %} settings__block__content--errors{% endif %}">
+                    {{ form.name }}
+                    {% if form.name.errors %}<p class="error">
+                    {% for error in form.name.errors %}{{ error }}<br>{% endfor %}
+                    </p>{% endif %}
+                </div>
+            </div>
+            <div class="settings__block">
+                <div class="settings__block__text">
+                    <p><label for="{{ form.telegram.id_for_label }}">{{ form.telegram.label }}</label></p>
+                    <span>{% trans "This information will be displayed on your profile" %}</span>
+                </div>
+                <div class="settings__block__content{% if form.telegram.errors %} settings__block__content--errors{% endif %}">
+                    {{ form.telegram }}
+                    {% if form.telegram.errors %}<p class="error">
+                    {% for error in form.telegram.errors %}{{ error }}<br>{% endfor %}
+                    </p>{% endif %}
+                </div>
+            </div>
+            <div class="settings__block">
+                <div class="settings__block__text">
+                    <p><label for="{{ form.twitter.id_for_label }}">{{ form.twitter.label }}</label></p>
+                    <span>{% trans "This information will be displayed on your profile" %}</span>
+                </div>
+                <div class="settings__block__content{% if form.twitter.errors %} settings__block__content--errors{% endif %}">
+                    {{ form.twitter }}
+                    {% if form.twitter.errors %}<p class="error">
+                    {% for error in form.twitter.errors %}{{ error }}<br>{% endfor %}
+                    </p>{% endif %}
+                </div>
+            </div>
+            <div class="settings__block">
+                <div class="settings__block__text">
+                    <p>{% trans "Wallet" %}</p>
+                    <span>{% trans "This information will be displayed on your profile" %}</span>
+                </div>
+                <div class="settings__block__content">
+                    <input type="text" value="{{ auth.account.wallet }}" disabled>
+                </div>
+            </div>
+            <div class="settings__block settings__block--avatar">
+                <div class="settings__block__text">
+                    <p>{% trans "Your photo" %}</p>
+                    <span>{% trans "Your photo will be displayed on your profile" %}</span>
+                </div>
+                <div class="settings__block__content">
+                    <div class="settings__avatar">
+                        {% if avatar %}
+                        {% thumbnail avatar.image "92x92" crop="center" as thumb %}
+                            <img class="js-thumbnail2" src="{{ thumb.url }}">
+                        {% endthumbnail %}
+						{% else %}
+                            <img class="js-thumbnail2" src="{% static 'img/no-avatar-md.jpg' %}">
+                        {% endif %}
+                        <div>
+                            <div class="js-image-input-div" style="display:none">
+                                {{ form.avatar }}
+                            </div>
+                            {% if form.avatar.errors %}<p class="errorlist">
+                            {% for error in form.avatar.errors %}{{ error }}<br>{% endfor %}
+                            </p>{% endif %}
+                            <a type="button" class="settings__avatar__delete" href="{% url 'core:delete_avatar' %}">{% trans "Delete" %}</a>
+                            <button type="button" class="js-update-avatar-img settings__avatar__update">{% trans "Update" %}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings__btns">
+                <a class="btn btn_white" href="{% url 'core:my_wts_offers' %}">{% trans "Cancel" %}</a>
+                <button class="btn" type="submit">{% trans "Save" %}</button>
+            </div>
+            {% endwith %}
+        </form>
+    </div>
+</section>
+{% endblock %}

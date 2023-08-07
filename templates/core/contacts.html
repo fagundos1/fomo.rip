@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% block main %}
+<section class="contacts">
+    <div class="content">
+        <div class="contacts__title">{% trans "Contact us" %}</div>
+        <div class="contacts__form">
+            <div class="contacts__form-row">
+                <div class="contacts__form-item">
+                    <div class="contacts__form-label">{% trans "Your name" %}</div>
+                    <div class="contacts__form-field">
+                        <input type="text" class="contacts__form-input" placeholder="Write name here..">
+                    </div>
+                </div>
+                <div class="contacts__form-item">
+                    <div class="contacts__form-label">{% trans "Your E-mail" %}</div>
+                    <div class="contacts__form-field">
+                        <input type="text" class="contacts__form-input" placeholder="Write email here..">
+                    </div>
+                </div>
+            </div>
+            <div class="contacts__form-row">
+                <div class="contacts__form-item contacts__form-item--full">
+                    <div class="contacts__form-label">{% trans "Subject" %}</div>
+                    <div class="contacts__form-field">
+                        <input type="text" class="contacts__form-input" placeholder="What’s the subject?">
+                    </div>
+                </div>
+            </div>
+            <div class="contacts__form-row">
+                <div class="contacts__form-item contacts__form-item--full">
+                    <div class="contacts__form-label">{% trans "Description" %}</div>
+                    <div class="contacts__form-field">
+                        <textarea placeholder="Write your message here..." class="contacts__form-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="contacts__form-bottom">
+                <div class="contacts__form-social">
+                    <div class="contacts__form-social_title">{% trans "Contact us via socials" %}</div>
+                    <div class="contacts__form-social_list">
+                        <div class="contacts__form-social_item"><a href="https://twitter.com/fomorip" target="_blank">{% include "include/svg/social-twitter.html" %}</a></div>
+                        <div class="contacts__form-social_item"><a href="https://medium.com/@fomorip" target="_blank">{% include "include/svg/social-medium.html" %}</a></div>
+                        <div class="contacts__form-social_item"><a href="https://www.youtube.com/channel/UCN0E4wWVXJF_qPwP5f_-QdA" target="_blank">{% include "include/svg/social-youtube.html" %}</a></div>
+                        <div class="contacts__form-social_item"><a href="https://t.me/fomoripnews" target="_blank">{% include "include/svg/social-telegram.html" %}</a></div>
+                    </div>
+                </div>
+                <div class="contacts__form-button">
+                    <button class="btn">{% trans "Send" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
