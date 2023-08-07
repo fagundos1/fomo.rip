@@ -1,0 +1,25 @@
+{% load i18n %}
+<div class="popup" id="cancel">
+    <p class="popup__caption">{% trans "Deal Cancellation" %}</p>
+    <p class="popup__subcaption">{% trans "Please state the reason for the cancellation" %}</p>
+    <div class="popup__form">
+        {% if not is_seller %}
+        <div class="checkbox">
+            <input class="js-cancel-reason" type="checkbox" name="checkbox4[]" value="item_not_provided" id="checkbox4-1">
+            <label for="checkbox4-1"><span></span>{% trans "The item has not been provided" %}</label>
+        </div>
+        <div class="checkbox">
+            <input class="js-cancel-reason" type="checkbox" name="checkbox4[]" value="seller_not_replied" id="checkbox4-2">
+            <label for="checkbox4-2"><span></span>{% trans "The seller does not reply" %}</label>
+        </div>
+        <div class="checkbox">
+            <input class="js-cancel-reason" type="checkbox" name="checkbox4[]" value="other" id="checkbox4-3">
+            <label for="checkbox4-3"><span></span>{% trans "Other" %}</label>
+        </div>
+        {% endif %}
+        <div class="input-container">
+            <textarea class="js-cancel-details" name="" placeholder="Your comment..."></textarea>
+        </div>
+        <button class="btn js-{% if is_payed %}{% if is_seller %}seller{% else %}buyer{% endif %}{% else %}only{% endif %}-cancel" data-chain-id="{{ deal.offer.get_chain_id }}" data-escrow-addr="{{ deal.offer.get_escrow_addr }}" data-deal-hash="{{ deal.hash_id }}" data-deal="{{ deal.pk }}">{% trans "Confirm" %}</button>
+    </div>
+</div>

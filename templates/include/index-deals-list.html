@@ -1,0 +1,42 @@
+{% load static thumbnail stars core_tags i18n %}
+<div class="table table_main">
+    <div class="table__head">
+        <div class="table__row">
+            <div class="table__col"></div>
+            <div class="table__col">{% trans "Name" %}</div>
+            <div class="table__col">{% trans "User" %}</div>
+            <div class="table__col">{% trans "Price" %}</div>
+            <div class="table__col"></div>
+        </div>
+    </div>
+    <div class="table__body">
+    {% for offer in offers_list %}
+        <div class="table__row">
+            <div class="table__col">&emsp;</div>
+            <div class="table__col table__col--name"><span{% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}>{{ offer }}</span></div>
+            <div class="table__col">
+                <div class="user-info">
+                    {% if offer.seller.avatar %}
+                    {% thumbnail offer.seller.avatar.image "30x30" crop="center" as thumb %}
+                    <img src="{{ thumb.url }}">
+                    {% endthumbnail %}
+                    {% else %}
+                    <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'core:profile_page' offer.seller.name %}"{% if offer.seller.is_long_name %} title="{{ offer.seller.full_name }}"{% endif %}>{{ offer.seller }}</a>
+                        {% if offer.seller.rating.value > 0 %}
+                        <div class="rating">
+                            <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                            {% starrating offer.seller.rating.value %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="table__col"><span class="price">{{ offer.price|priceformat }}$</span></div>
+            <div class="table__col"><a href="{% url 'core:offer_page' offer.pk %}" class="btn">{% trans "Details" %}</a></div>
+        </div>
+    {% endfor %}
+    </div>
+</div>

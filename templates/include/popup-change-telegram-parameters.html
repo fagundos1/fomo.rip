@@ -1,0 +1,89 @@
+<div class="popup popup--telegram-parameters" id="changeTelegramParameters">
+    <p class="popup__caption">Telegram Notifcations Parameters</p>
+    <form action="javascript:void(0)" method="POST" class="form telegram-parameters-form">
+        {% csrf_token %}
+        <div class="form__columns">
+            <div class="form__column">
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Offer became active</span>
+                    </label>
+                </div>
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Deal confirmed</span>
+                    </label>
+                </div>
+                {% comment %}
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Seller confirmed deal</span>
+                    </label>
+                </div>
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Buyer claimed</span>
+                    </label>
+                </div>
+                {% endcomment %}
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Deal completed</span>
+                    </label>
+                </div>
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Deal closed</span>
+                    </label>
+                </div>
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Deal review created</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form__column">
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Deal expired</span>
+                    </label>
+                </div>
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Buyer payed</span>
+                    </label>
+                </div>
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Seller payed</span>
+                    </label>
+                </div>
+                {% comment %}
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Seller claimed</span>
+                    </label>
+                </div>
+                {% endcomment %}
+                <div class="form__column-row">
+                    <label class="custom-checkbox">
+                      <input type="checkbox" value="false">
+                      <span>Deal arbitration created</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn" data-popup="saveSuccess">Save</button>
+    </form>
+</div>

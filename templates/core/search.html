@@ -1,0 +1,149 @@
+{% extends 'layouts/base.html' %}
+{% load static thumbnail stars core_tags i18n %}
+{% block main %}
+<section class="main-page">
+    <img src="{% static 'img/main-page_section-bg.png' %}" alt="" class="main-page__bg">
+    <div class="content">
+        <h1>Search results</h1>
+        <div class="main-page__switcher">
+            <div class="main-page__switcher-title">Offer types</div>
+            <div class="main-page__switcher-wrapper">
+                <label class="switcher switcher--type">
+                    <input type="checkbox" class="js-toggle-type" >
+                    <span class="switcher__field">
+                        <span class="switcher__field-value">WTS</span>
+                        <span class="switcher__field-value">WTB</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="js-type-switcher-content js-type-switcher-content--WTS">
+            <div class="main-page__search-line">
+                <div class="main-page__search-line-block">
+                    <div class="fake-select fake-select--slim">
+                        <select class="js-search-sort">
+                            <option value="-price"{% if search_order == '-price' %} selected{% endif %}>{% trans "Price" %}: {% trans "High to Low" %}</option>
+                            <option value="price"{% if search_order == 'price' %} selected{% endif %}>{% trans "Price" %}: {% trans "Low to High" %}</option>
+                            <option value="-date"{% if search_order == '-date' %} selected{% endif %}>{% trans "Date" %}: {% trans "Latest" %}</option>
+                            <option value="date"{% if search_order == 'date' %} selected{% endif %}>{% trans "Date" %}: {% trans "Oldest" %}</option>
+                            <option value="-rating"{% if search_order == '-rating' %} selected{% endif %}>{% trans "Rating" %}: {% trans "High to Low" %}</option>
+                            <option value="rating"{% if search_order == 'rating' %} selected{% endif %}>{% trans "Rating" %}: {% trans "Low to High" %}</option>
+                        <select>
+                    </div>
+                </div>
+            </div>
+            <div class="table table_main">
+                <div class="table__head">
+                    <div class="table__row">
+                        <div class="table__col"></div>
+                        <div class="table__col">{% trans "Name" %}</div>
+                        <div class="table__col">{% trans "User" %}</div>
+                        <div class="table__col">{% trans "Price" %}</div>
+                        <div class="table__col"></div>
+                    </div>
+                </div>
+                <div class="table__body">
+                {% if offer_list|length > 0 %}
+                {% for offer in offer_list %}
+                    <div class="table__row">
+                        <div class="table__col">&emsp;</div>
+                        <div class="table__col"><span{% if offer.is_long_name %} title="{{ offer.name }}"{% endif %}>{{ offer }}</span></div>
+                        <div class="table__col">
+                            <div class="user-info">
+                                {% if offer.seller.avatar %}
+                                {% thumbnail offer.seller.avatar.image "30x30" crop="center" as thumb %}
+                                <img src="{{ thumb.url }}">
+                                {% endthumbnail %}
+                                {% else %}
+                                <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                                {% endif %}
+                                <div>
+                                    <a href="{% url 'core:profile_page' offer.seller.name %}">{{ offer.seller }}</a>
+                                    {% if offer.seller.rating.value > 0 %}
+                                    <div class="rating">
+                                        <span class="rating__number">{{ offer.seller.rating.value|floatformat }}</span>
+                                        {% starrating offer.seller.rating.value %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table__col"><span class="price">{{ offer.price|priceformat }}$</span></div>
+                        <div class="table__col"><a href="{% url 'core:offer_page' offer.pk %}" class="btn">{% trans "Offer details" %}</a></div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <div class="empty-offer">{% trans "No offers found" %}</div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="js-type-switcher-content js-type-switcher-content--WTB" style="display: none;">
+            <div class="main-page__search-line">
+                <div class="main-page__search-line-block">
+                    <div class="fake-select fake-select--slim">
+                        <select class="js-search-sort">
+                            <option value="-price"{% if search_order == '-price' %} selected{% endif %}>{% trans "Price" %}: {% trans "High to Low" %}</option>
+                            <option value="price"{% if search_order == 'price' %} selected{% endif %}>{% trans "Price" %}: {% trans "Low to High" %}</option>
+                            <option value="-date"{% if search_order == '-date' %} selected{% endif %}>{% trans "Date" %}: {% trans "Latest" %}</option>
+                            <option value="date"{% if search_order == 'date' %} selected{% endif %}>{% trans "Date" %}: {% trans "Oldest" %}</option>
+                            <option value="-rating"{% if search_order == '-rating' %} selected{% endif %}>{% trans "Rating" %}: {% trans "High to Low" %}</option>
+                            <option value="rating"{% if search_order == 'rating' %} selected{% endif %}>{% trans "Rating" %}: {% trans "Low to High" %}</option>
+                        <select>
+                    </div>
+                </div>
+            </div>
+            <div class="table table_main">
+                <div class="table__head">
+                    <div class="table__row">
+                        <div class="table__col"></div>
+                        <div class="table__col">{% trans "Name" %}</div>
+                        <div class="table__col">{% trans "User" %}</div>
+                        <div class="table__col">{% trans "Price" %}</div>
+                        <div class="table__col"></div>
+                    </div>
+                </div>
+                <div class="table__body">
+                {% if wtb_request_list|length > 0 %}
+                {% for wtb_request in wtb_request_list %}
+                    <div class="table__row">
+                        <div class="table__col">&emsp;</div>
+                        <div class="table__col"><span{% if wtb_request.is_long_name %} title="{{ wtb_request.name }}"{% endif %}>{{ wtb_request }}</span></div>
+                        <div class="table__col">
+                            <div class="user-info">
+                                {% if wtb_request.account.avatar %}
+                                {% thumbnail wtb_request.account.avatar.image "30x30" crop="center" as thumb %}
+                                <img src="{{ thumb.url }}">
+                                {% endthumbnail %}
+                                {% else %}
+                                <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                                {% endif %}
+                                <div>
+                                    <a href="{% url 'core:profile_page' wtb_request.account.name %}">{{ wtb_request.account }}</a>
+                                    {% if wtb_request.account.rating.value > 0 %}
+                                    <div class="rating">
+                                        <span class="rating__number">{{ wtb_request.account.rating.value|floatformat }}</span>
+                                        {% starrating wtb_request.account.rating.value %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table__col"><span class="price">{{ wtb_request.price|priceformat }}$</span></div>
+                        <div class="table__col"><a href="javascript:void(0)" class="btn{% if not auth.is_authenticated %} js-no-auth-message{% endif %}"{% if auth.is_authenticated %} data-popup="make-offer"{% endif %} data-wtb-request-pk="{{ wtb_request.pk }}">{% trans "Make an offer" %}</a></div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <div class="empty-offer">{% trans "No WTB offers found" %}</div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block extra_popups %}
+    {% if auth.is_authenticated %}
+    {% include 'include/popup-make-offer.html' with account=auth.account %}
+    {% endif %}
+{% endblock %}

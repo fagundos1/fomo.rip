@@ -1,0 +1,60 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% block main %}
+<section class="form offer-form">
+    <div class="content">
+        <div class="form__caption">
+            <h1>{% if is_edit %}{% trans "Editing an offer" %}{% else %}{% trans "Adding an offer" %}{% endif %}</h1>
+            {% if not is_edit %}
+            <h2>{% trans "Fill in the fields to create a new offer" %}</h2>
+            {%  endif %}
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="fake-select">
+                {{ form.offer_type }}
+            </div>
+            <div class="form__input-block{% if form.name.errors %} form__input-block--invalid{% endif %}">
+                {{ form.name }}
+                <label for="id_name">{% trans "Name" %}</label>
+                {% if form.name.errors %}<p class="errorlist">
+                {% for error in form.name.errors %}{{ error }}<br>{% endfor %}
+                </p>{% endif %}
+            </div>
+            <div class="form__input-block{% if form.network.errors %} form__input-block--invalid{% endif %}">
+                <div class="fake-select fake-select--network fake-select--network-form">
+                    {{ form.network }}
+                    {% if form.network.errors %}<p class="errorlist">
+                    {% for error in form.network.errors %}{{ error }}<br>{% endfor %}
+                    </p>{% endif %}
+                </div>
+                <label for="id_name">{% trans "Network" %}</label>
+            </div>
+            <div class="form__input-line">
+                <div class="form__input-block{% if form.price.errors %} form__input-block--invalid{% endif %}">
+                    {{ form.price }}
+                    <label for="id_price">{% trans "Price" %}</label>
+                    <p class="input-container__hint">{% trans "fee" %} {{ settings.FEE_PERCENT }}% <span>({% trans "min" %} {{ settings.MIN_PRICE  }}$)</span></p>
+                    {% if form.price.errors %}<p class="errorlist">
+                    {% for error in form.price.errors %}{{ error }}<br>{% endfor %}
+                    </p>{% endif %}
+                </div>
+                <div class="form__input-block{% if form.collateral.errors %} form__input-block--invalid{% endif %} js-wts-wtb-collateral">
+                    {{ form.collateral }}
+                    <label for="id_collateral">{% trans "Deposit" %}</label>
+                    {% if form.collateral.errors %}<p class="errorlist">
+                    {% for error in form.collateral.errors %}{{ error }}<br>{% endfor %}
+                    </p>{% endif %}
+                </div>
+            </div>
+            <div class="form__input-block{% if form.details.errors %} form__input-block--invalid{% endif %} js-wts-wtb-details">
+                <textarea name="details" placeholder="{% trans "Details of your offer..." %}">{{ form.details.value }}</textarea>
+                {% if form.details.errors %}<p class="errorlist">
+                {% for error in form.details.errors %}{{ error }}<br>{% endfor %}
+                </p>{% endif %}
+            </div>
+            <button type="submit" class="btn">{% if is_edit %}{% trans "Save"%}{% else %}{% trans "Add" %}{% endif %} {% trans "offer" %}</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

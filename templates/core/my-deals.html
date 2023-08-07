@@ -1,0 +1,86 @@
+{% extends 'layouts/base.html' %}
+{% load thumbnail stars static i18n %}
+{% block main %}
+    <section class="profile">
+        <div class="content deals__container">
+            <div class="profile__user-info">
+                {% if auth.account.avatar %}
+                {% thumbnail auth.account.avatar.image "130x130" crop="center" as thumb %}
+                <img src="{{ thumb.url }}">
+                {% endthumbnail %}
+                {% else %}
+                <img src="{% static 'img/no-avatar.jpg' %}" alt="">
+                {% endif %}
+                <p{% if auth.account.is_long_name %} title="{{ auth.account.full_name }}"{% endif %}>{{ auth.account }}</p>
+                {% if auth.account.rating.value > 0 %}
+                <div class="rating">
+                    <span class="rating__number">{{ auth.account.rating.value|floatformat }}</span>
+                    {% starrating auth.account.rating.value %}
+                </div>
+                {% endif %}
+                <div class="social">
+                    {% if auth.account.twitter %}
+                    <a href="https://twitter.com/{{ auth.account.twitter }}" target="_blank">
+                        {% include "include/svg/twitter.html" %}
+                    </a>
+                    {% endif %}
+                    {% if auth.account.telegram %}
+                    <a href="https://t.me/{{ auth.account.telegram }}" target="_blank">
+                        {% include "include/svg/telegram.html" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="tabs">
+                <div class="tabs__choose">
+                    <button data-tab="1" class="active">{% trans "My active deals" %} <span>({{ num_deals }})</span></button>
+                    <button data-tab="2">{% trans "My closed deals" %} <span>({{ num_closed_deals }})</span></button>
+                </div>
+                <div class="tabs__container">
+                    <div class="tab" data-tab="1">
+                        <div class="table table_deals">
+                            <div class="table__head">
+                                <div class="table__row">
+                                    <div class="table__col">{% trans "Name" %}</div>
+                                    <div class="table__col">{% trans "Seller" %}</div>
+                                    <div class="table__col">{% trans "Buyer" %}</div>
+                                    <div class="table__col">{% trans "Offer type" %}</div>
+                                    <div class="table__col">{% trans "Price" %}</div>
+                                    <div class="table__col">{% trans "Deposit" %}</div>
+                                    <div class="table__col">{% trans "Status" %}</div>
+                                </div>
+                            </div>
+                            <div class="js-deals-tbody table__body table__body--mydeals">
+                                {% include "include/my-deals-list.html" with deals=deals %}
+                            </div>
+                        </div>
+                        {% if has_more_deals %}
+                        <button class="js-show-more-deals deals__showmore">{% trans "Show More" %}</button>
+                        {% endif %}
+                    </div>
+                    <div class="tab" data-tab="2">
+                        <div class="table table_deals">
+                            <div class="table__head">
+                                <div class="table__row">
+                                    <div class="table__col">{% trans "Name" %}</div>
+                                    <div class="table__col">{% trans "Seller" %}</div>
+                                    <div class="table__col">{% trans "Buyer" %}</div>
+                                    <div class="table__col">{% trans "Offer type" %}</div>
+                                    <div class="table__col">{% trans "Price" %}</div>
+                                    <div class="table__col">{% trans "Deposit" %}</div>
+                                    <div class="table__col">{% trans "Status" %}</div>
+                                </div>
+                            </div>
+                            <div class="js-closed-deals-tbody table__body table__body--mydeals">
+                                {% include "include/my-deals-list.html" with deals=closed_deals %}
+                            </div>
+                        </div>
+                        {% if has_more_closed_deals %}
+                        <button class="js-show-more-closed-deals deals__showmore">{% trans "Show More" %}</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load i18n %}
+<div class="popup popup--add-request" id="add_request">
+    <p class="popup__caption">{% trans "Adding a request" %}</p>
+    <p class="popup__subcaption">{% trans "Fill in the fields to create a new request" %}</p>
+    <form action="{% url 'core:create_request_page' %}" method="POST" class="form">
+        {% csrf_token %}
+        <div class="form__input-block">
+            <input id="id_name" type="text" name="name" required>
+            <label for="id_name">{% trans "Name" %}</label>
+        </div>
+        <div class="form__input-block form__input-block--prefixed">
+            <div class="form__input-prefix">$</div>
+            <input id="id_name" type="text" name="max_price" required>
+            <label for="id_name">{% trans "Maximum price" %}</label>
+        </div>
+        <button type="submit" class="btn">{% trans "Add request" %}</button>
+    </form>
+</div>

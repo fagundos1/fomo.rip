@@ -1,0 +1,144 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_modify %}
+{% block title %}Resolve Deal{% endblock %}
+{% block breadcrumbs %}
+<ul>
+    <li><a href="{% url 'admin:index' %}">{% trans "Home" %}</a></li>
+</ul>
+{% endblock %}
+{% block content_title %}
+<h1>Resolve Deal</h1>
+{% endblock %}
+<!-- CONTENT -->
+{% block content %}
+<form action="{% url 'admin:core_deal_arbitration'  %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="deal_pk" value="{{ deal_pk }}"/>
+    <fieldset class="module grp-module">
+        <div class="form-row grp-row grp-cells-1">
+            <div class="field-box l-2c-fluid l-d-4">
+                <div class="c-1">
+                    <strong>{% trans "Price" %}</strong>
+                </div>
+                <div class="c-2">
+                    <input type="text" class="vTextField" id="id_price" value="{{ deal.offer.price }}" readonly disabled>
+                </div>
+            </div>
+        </div>
+        <div class="form-row grp-row grp-cells-1">
+            <div class="field-box l-2c-fluid l-d-4">
+                <div class="c-1">
+                    <strong>Collateral</strong>
+                </div>
+                <div class="c-2">
+                    <input type="text" class="vTextField" id="id_collateral" value="{{ deal.offer.collateral }}" readonly disabled>
+                </div>
+            </div>
+        </div>
+        <div class="form-row grp-row grp-cells-1">
+            <div class="field-box l-2c-fluid l-d-4">
+                <div class="c-1">
+                    <strong>Fee</strong>
+                </div>
+                <div class="c-2">
+                    <input type="text" class="vTextField" id="id_fee" value="{{ deal.fee }}" readonly disabled>
+                </div>
+            </div>
+        </div>
+        <div class="form-row grp-row grp-cells-1">
+            <div class="field-box l-2c-fluid l-d-4">
+                <div class="c-1">
+                    <strong>Buyer Deposited</strong>
+                </div>
+                <div class="c-2">
+                    <input type="text" class="vTextField" id="id_buyer_deposited" value="{{ buyer_deposited }}" readonly disabled>
+                </div>
+            </div>
+        </div>
+        <div class="form-row grp-row grp-cells-1">
+            <div class="field-box l-2c-fluid l-d-4">
+                <div class="c-1">
+                    <strong>Seller Deposited</strong>
+                </div>
+                <div class="c-2">
+                    <input type="text" class="vTextField" id="id_seller_deposited" value="{{ seller_deposited }}" readonly disabled>
+                </div>
+            </div>
+        </div>
+        <div class="form-row grp-row grp-cells-1">
+            <ul>
+                <li><a class="js-resolve-to-buyer">Resolve to buyer</a></li>
+                <li><a class="js-resolve-to-seller">Resolve to seller</a></li>
+                <li><a class="js-resolve-equal">Resolve equal</a></li>
+            </li>
+        </div>
+        <div class="form-row grp-row grp-cells-1">
+            <div class="field-box l-2c-fluid l-d-4">
+                <div class="c-1">
+                    <label for="id_pay_to_buyer">Pay To Buyer</label>
+                </div>
+                <div class="c-2">
+                    <input type="text" name="pay_to_buyer" value="0" class="vTextField" maxlength="64" id="id_pay_to_buyer" required>
+                </div>
+            </div>
+        </div>
+        <div class="form-row grp-row grp-cells-1">
+            <div class="field-box l-2c-fluid l-d-4">
+                <div class="c-1">
+                    <label for="id_pay_to_seller">Pay To Seller</label>
+                </div>
+                <div class="c-2">
+                    <input type="text" name="pay_to_seller" value="0" class="vTextField" maxlength="64" id="id_pay_to_seller" required>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <footer class="grp-module grp-submit-row grp-fixed-footer">
+    <ul>
+        <li><input type="submit" value="Save" class="grp-button grp-default" name="_save" /></li>
+    </ul>
+    </footer>
+</form>
+<script>
+    function initResolve(){
+        jQuery('.js-resolve-to-buyer').click(function(eventOjb) {
+            const buyerDeposited = parseFloat(jQuery('#id_buyer_deposited').val().replace(',', '.'));
+            const sellerDeposited = parseFloat(jQuery('#id_seller_deposited').val().replace(',', '.'));
+            const fee = parseFloat(jQuery('#id_fee').val().replace(',', '.'));
+            let payToBuyer = buyerDeposited + sellerDeposited - fee;
+            if (payToBuyer < 0) {
+                payToBuyer = 0;
+            }
+            jQuery('#id_pay_to_buyer').val(payToBuyer);
+            jQuery('#id_pay_to_seller').val(0);
+        });
+        jQuery('.js-resolve-to-seller').click(function(eventOjb) {
+            const buyerDeposited = parseFloat(jQuery('#id_buyer_deposited').val().replace(',', '.'));
+            const sellerDeposited = parseFloat(jQuery('#id_seller_deposited').val().replace(',', '.'));
+            const fee = parseFloat(jQuery('#id_fee').val().replace(',', '.'));
+            let payToSeller = buyerDeposited + sellerDeposited - fee;
+            if (payToSeller < 0) {
+                payToSeller = 0;
+            }
+            jQuery('#id_pay_to_buyer').val(0);
+            jQuery('#id_pay_to_seller').val(payToSeller);
+        });
+        jQuery('.js-resolve-equal').click(function(eventOjb) {
+            const buyerDeposited = parseFloat(jQuery('#id_buyer_deposited').val().replace(',', '.'));
+            const sellerDeposited = parseFloat(jQuery('#id_seller_deposited').val().replace(',', '.'));
+            const fee = parseFloat(jQuery('#id_fee').val().replace(',', '.'));
+            let payToBuyer = buyerDeposited - fee;
+            if (payToBuyer < 0) {
+                payToBuyer = 0;
+            }
+            let payToSeller = sellerDeposited;
+            if (payToSeller < 0) {
+                payToSeller = 0;
+            }
+            jQuery('#id_pay_to_buyer').val(payToBuyer);
+            jQuery('#id_pay_to_seller').val(payToSeller);
+        });
+    }
+    jQuery(document).ready(initResolve);
+</script>
+{% endblock %}

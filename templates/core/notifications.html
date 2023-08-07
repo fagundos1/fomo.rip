@@ -1,0 +1,49 @@
+{% extends 'layouts/base.html' %}
+{% load static core_tags humanize i18n thumbnail %}
+{% block main %}
+<section class="notifications">
+    <div class="content">
+        <div class="notifications__title">{% trans "Notifications" %}</div>
+
+        <div class="tabs">
+            <div class="tabs__choose">
+                <button data-tab="1" class="active">{% trans "Deals" %}</button>
+                <button data-tab="2" class="js-update-notifications-seen" data-notifications-type="wts">{% trans "WTS Offers" %}{% if wts_unseen_notifications > 0 %} <i>{{ wts_unseen_notifications }}</i>{% endif %}</button>
+                <button data-tab="3" class="js-update-notifications-seen" data-notifications-type="wtb">{% trans "WTB Offers" %}{% if wtb_unseen_notifications > 0 %} <i>{{ wtb_unseen_notifications }}</i>{% endif %}</button>
+            </div>
+            <div class="tabs__container">
+                <div class="tab" data-tab="1">
+                    <div class="notifications__list">
+                        <div class="notifications__results">
+                            {% include 'core/notifications-list.html' with notifications=deals_notifications %}
+                        </div>
+                        {% if has_more_deal_notifications %}
+                        <button class="js-show-more-notifications notifications__showmore" data-notifications-type="deal">{% trans "Show More" %}</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="tab" data-tab="2">
+                    <div class="notifications__list">
+                        <div class="notifications__results">
+                            {% include 'core/notifications-list.html' with notifications=wts_notifications %}
+                        </div>
+                        {% if has_more_wts_notifications %}
+                        <button class="js-show-more-notifications notifications__showmore" data-notifications-type="wts">{% trans "Show More" %}</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="tab" data-tab="3">
+                    <div class="notifications__list">
+                        <div class="notifications__results">
+                            {% include 'core/notifications-list.html' with notifications=wtb_notifications %}
+                        </div>
+                        {% if has_more_wtb_notifications %}
+                        <button class="js-show-more-notifications notifications__showmore" data-notifications-type="wtb">{% trans "Show More" %}</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

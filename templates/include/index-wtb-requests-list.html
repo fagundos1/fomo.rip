@@ -1,0 +1,42 @@
+{% load static thumbnail stars core_tags i18n %}
+<div class="table table_main table_main--wtb">
+    <div class="table__head">
+        <div class="table__row">
+            <div class="table__col"></div>
+            <div class="table__col">{% trans "Name" %}</div>
+            <div class="table__col">{% trans "User" %}</div>
+            <div class="table__col">{% trans "Price" %}</div>
+            <div class="table__col"></div>
+        </div>
+    </div>
+    <div class="table__body">
+    {% for wtb_request in wtb_requests_list %}
+        <div class="table__row">
+            <div class="table__col">&emsp;</div>
+            <div class="table__col table__col--name"><span{% if wtb_request.is_long_name %} title="{{ wtb_request.name }}"{% endif %}>{{ wtb_request }}</span></div>
+            <div class="table__col">
+                <div class="user-info">
+                    {% if wtb_request.account.avatar %}
+                    {% thumbnail wtb_request.account.avatar.image "30x30" crop="center" as thumb %}
+                    <img src="{{ thumb.url }}">
+                    {% endthumbnail %}
+                    {% else %}
+                    <img src="{% static 'img/no-avatar-sm.jpg' %}" alt="">
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'core:profile_page' wtb_request.account.name %}"{% if wtb_request.account.is_long_name %} title="{{ wtb_request.account.full_name }}"{% endif %}>{{ wtb_request.account }}</a>
+                        {% if wtb_request.account.rating.value > 0 %}
+                        <div class="rating">
+                            <span class="rating__number">{{ wtb_request.account.rating.value|floatformat }}</span>
+                            {% starrating wtb_request.account.rating.value %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="table__col"><span class="price">{{ wtb_request.price|priceformat }}$</span></div>
+            <div class="table__col"><a href="javascript:void(0)" class="btn{% if not auth.is_authenticated %} js-no-auth-message{% endif %}"{% if auth.is_authenticated %} data-popup="make-offer"{% endif %} data-wtb-request-pk="{{ wtb_request.pk }}">{% trans "Make an offer" %}</a></div>
+        </div>
+    {% endfor %}
+    </div>
+</div>

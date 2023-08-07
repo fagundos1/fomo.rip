@@ -1,0 +1,78 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+{% block main %}
+<section class="main-page">
+    <img src="{% static 'img/main-page_section-bg.png' %}" alt="" class="main-page__bg">
+    <img src="{% static 'img/main-page_section-bg--dark.png' %}" alt="" class="main-page__bg main-page__bg--dark">
+    <div class="content">
+        <div class="main-page__slogan">{% trans "FIRST OTC MARKETPLACE FOR ALLOCATIONS AND WHITELISTS" %}</div>
+        <h1>{% trans "BUY AND SELL NEW GEMS BEFORE OTHERS." %}</h1>
+        <button class="main-page__toggle-video"></button>
+        <div class="main-page__switcher">
+            <div class="main-page__switcher-title">Offer types</div>
+            <div class="main-page__switcher-wrapper">
+                <label class="switcher switcher--type">
+                    <input type="checkbox" class="js-toggle-type" >
+                    <span class="switcher__field">
+                        <span class="switcher__field-value">WTS</span>
+                        <span class="switcher__field-value">WTB</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="js-type-switcher-content js-type-switcher-content--WTS">
+            <div class="tabs">
+                <div class="tabs__choose">
+                    <button data-tab="1" class="active">NFT</button>
+                    <button data-tab="2">{% trans "Tokens" %}</button>
+                    <button data-tab="3">{% trans "Workers" %}</button>
+                    <button data-tab="4">{% trans "Other" %}</button>
+                </div>
+                <div class="tabs__container">
+                    <div class="tab" data-tab="1">
+                        {% include "include/index-deals-list.html" with offers_list=nft_offers %}
+                    </div>
+                    <div class="tab" data-tab="2">
+                        {% include "include/index-deals-list.html" with offers_list=ido_offers %}
+                    </div>
+                    <div class="tab" data-tab="3">
+                        {% include "include/index-deals-list.html" with offers_list=worker_offers %}
+                    </div>
+                    <div class="tab" data-tab="4">
+                        {% include "include/index-deals-list.html" with offers_list=other_offers %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="js-type-switcher-content js-type-switcher-content--WTB" style="display: none;">
+            <div class="tabs">
+                <div class="tabs__choose">
+                    <button data-tab="1" class="active">NFT</button>
+                    <button data-tab="2">{% trans "Tokens" %}</button>
+                    <button data-tab="3">{% trans "Workers" %}</button>
+                    <button data-tab="4">{% trans "Other" %}</button>
+                </div>
+                <div class="tabs__container">
+                    <div class="tab" data-tab="1">
+                        {% include "include/index-wtb-requests-list.html" with wtb_requests_list=nft_wtb_requests %}
+                    </div>
+                    <div class="tab" data-tab="2">
+                        {% include "include/index-wtb-requests-list.html" with wtb_requests_list=ido_wtb_requests %}
+                    </div>
+                    <div class="tab" data-tab="3">
+                        {% include "include/index-wtb-requests-list.html" with wtb_requests_list=worker_wtb_requests %}
+                    </div>
+                    <div class="tab" data-tab="4">
+                        {% include "include/index-wtb-requests-list.html" with wtb_requests_list=other_wtb_requests %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block extra_popups %}
+    {% if auth.is_authenticated %}
+    {% include 'include/popup-make-offer.html' with account=auth.account %}
+    {% endif %}
+{% endblock %}

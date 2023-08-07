@@ -1,0 +1,40 @@
+{% extends 'layouts/base.html' %}
+{% load humanize i18n %}
+{% block main %}
+<section class="main-page">
+    <div class="content latest">
+        <div class="latest__statistic">
+            <div class="latest__statistic-wrapper">
+                <div class="latest__statistic-item">
+                    <div class="latest__statistic-title">{{ summary.closed_count }}</div>
+                    <div class="latest__statistic-text">{% trans "Total deals" %}</div>
+                </div>
+                <div class="latest__statistic-item">
+                    <div class="latest__statistic-title">{{ summary.closed_summ|floatformat|intword }} USD</div>
+                    <div class="latest__statistic-text">{% trans "Total deals volume" %}</div>
+                </div>
+            </div>
+        </div>
+        <h1 class="latest__title">Latest Deals</h1>
+        <div class="latest__table">
+            <div class="table">
+            	<div class="table__head">
+            		<div class="table__row">
+                        <div class="table__col">{% trans "Name" %}</div>
+                        <div class="table__col">{% trans "Seller" %}</div>
+                        <div class="table__col">{% trans "Buyer" %}</div>
+                        <div class="table__col">{% trans "Price" %}</div>
+                        <div class="table__col">{% trans "Time" %}</div>
+            		</div>
+            	</div>
+            	<div class="js-latest-deals-tbody table__body">
+                    {% include 'include/latest-deals.html' %}
+            	</div>
+            </div>
+            {% if has_more_deals %}
+            <button class="js-show-more-latest-deals deals__showmore">{% trans "Show More" %}</button>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

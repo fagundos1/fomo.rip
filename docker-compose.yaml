@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: fomorip_pg_db
+    image: postgres:15.3-alpine
+    env_file: .env
+    volumes:
+      - fomorip_pg15_db:/var/lib/postgresql/data
+  webapp:
+    image: local/fomorip:0.0.1
+    env_file: .env
+    build: .
+    volumes:
+      - ./nftmarket:/opt/djangoapp/nftmarket
+      - ./templates:/opt/djangoapp/templates
+      - ./static:/opt/djangoapp/static
+    depends_on:
+      - db
+    ports:
+      - 127.0.0.1:8000:8000
+volumes:
+  fomorip_pg15_db:
+    name: 'fomorip_pg15_db'

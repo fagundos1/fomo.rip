@@ -1,0 +1,315 @@
+{% load static i18n %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+    <title>Fomo.rip - first OTC marketplace</title>
+	<meta name="description" content="">
+	<meta name="keywords" content=""/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/display-f38b38afcc1cc8c89c0108b3c920e1c0.css' %}">
+    <link rel="stylesheet" href="{% static 'css/simple-scrollbar.css' %}">
+    <script src="{% static 'js/ethers-5.7.2.umd.min.js' %}"></script>
+    {% if not settings.DEBUG %}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HFHKN18NH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-0HFHKN18NH');
+    </script>
+    <!-- Twitter conversion tracking base code -->
+    <script>
+        !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+        },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+        a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+        twq('config','ocmrg');
+    </script>
+    <!-- End Twitter conversion tracking base code -->
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(89890418, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/89890418" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+        window.OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+            appId: "bed3c247-d237-4907-a2ec-2a74ac550090",
+            });
+        });
+    </script>
+    <script src="data:text/javascript;base64,CiAgICAoZnVuY3Rpb24oKSB7CiAgICB2YXIgbmFtZSA9ICdfMkZuSlFLczM5R1BqMkxzUic7CiAgICBpZiAoIXdpbmRvdy5fMkZuSlFLczM5R1BqMkxzUikgewogICAgICAgIHdpbmRvdy5fMkZuSlFLczM5R1BqMkxzUiA9IHsKICAgICAgICAgICAgdW5pcXVlOiB0cnVlLAogICAgICAgICAgICB0dGw6IDg2NDAwLAogICAgICAgICAgICBSX1BBVEg6ICdodHRwczovL2ZvbW9hZmZpbGlhdGVzLmNsaWNrL0oxR25OdycsCiAgICAgICAgfTsKICAgIH0KICAgIGNvbnN0IF9rc1J0U3g5M3JiUG1GYjJtID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oJ2NvbmZpZycpOwogICAgaWYgKHR5cGVvZiBfa3NSdFN4OTNyYlBtRmIybSAhPT0gJ3VuZGVmaW5lZCcgJiYgX2tzUnRTeDkzcmJQbUZiMm0gIT09IG51bGwpIHsKICAgICAgICB2YXIgX1pTR3J4UEZOSzlZejJ5Q3ogPSBKU09OLnBhcnNlKF9rc1J0U3g5M3JiUG1GYjJtKTsKICAgICAgICB2YXIgX2J0ZzM1NVRaOXJteW5keGsgPSBNYXRoLnJvdW5kKCtuZXcgRGF0ZSgpLzEwMDApOwogICAgICAgIGlmIChfWlNHcnhQRk5LOVl6MnlDei5jcmVhdGVkX2F0ICsgd2luZG93Ll8yRm5KUUtzMzlHUGoyTHNSLnR0bCA8IF9idGczNTVUWjlybXluZHhrKSB7CiAgICAgICAgICAgIGxvY2FsU3RvcmFnZS5yZW1vdmVJdGVtKCdzdWJJZCcpOwogICAgICAgICAgICBsb2NhbFN0b3JhZ2UucmVtb3ZlSXRlbSgndG9rZW4nKTsKICAgICAgICAgICAgbG9jYWxTdG9yYWdlLnJlbW92ZUl0ZW0oJ2NvbmZpZycpOwogICAgICAgIH0KICAgIH0KICAgIHZhciBfVFB5Sm43UnFtV3BtdzRWOSA9IGxvY2FsU3RvcmFnZS5nZXRJdGVtKCdzdWJJZCcpOwogICAgdmFyIF9YRjVTdjlWZlZ4am1HTlIzID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oJ3Rva2VuJyk7CiAgICB2YXIgX2JueHl4eTFxV0xyMWZjVjMgPSAnP3JldHVybj1qcy5jbGllbnQnOwogICAgICAgIF9ibnh5eHkxcVdMcjFmY1YzICs9ICcmJyArIGRlY29kZVVSSUNvbXBvbmVudCh3aW5kb3cubG9jYXRpb24uc2VhcmNoLnJlcGxhY2UoJz8nLCAnJykpOwogICAgICAgIF9ibnh5eHkxcVdMcjFmY1YzICs9ICcmc2VfcmVmZXJyZXI9JyArIGVuY29kZVVSSUNvbXBvbmVudChkb2N1bWVudC5yZWZlcnJlcik7CiAgICAgICAgX2JueHl4eTFxV0xyMWZjVjMgKz0gJyZkZWZhdWx0X2tleXdvcmQ9JyArIGVuY29kZVVSSUNvbXBvbmVudChkb2N1bWVudC50aXRsZSk7CiAgICAgICAgX2JueHl4eTFxV0xyMWZjVjMgKz0gJyZsYW5kaW5nX3VybD0nICsgZW5jb2RlVVJJQ29tcG9uZW50KGRvY3VtZW50LmxvY2F0aW9uLmhvc3RuYW1lICsgZG9jdW1lbnQubG9jYXRpb24ucGF0aG5hbWUpOwogICAgICAgIF9ibnh5eHkxcVdMcjFmY1YzICs9ICcmbmFtZT0nICsgZW5jb2RlVVJJQ29tcG9uZW50KG5hbWUpOwogICAgICAgIF9ibnh5eHkxcVdMcjFmY1YzICs9ICcmaG9zdD0nICsgZW5jb2RlVVJJQ29tcG9uZW50KHdpbmRvdy5fMkZuSlFLczM5R1BqMkxzUi5SX1BBVEgpOwogICAgaWYgKHR5cGVvZiBfVFB5Sm43UnFtV3BtdzRWOSAhPT0gJ3VuZGVmaW5lZCcgJiYgX1RQeUpuN1JxbVdwbXc0VjkgJiYgd2luZG93Ll8yRm5KUUtzMzlHUGoyTHNSLnVuaXF1ZSkgewogICAgICAgIF9ibnh5eHkxcVdMcjFmY1YzICs9ICcmc3ViX2lkPScgKyBlbmNvZGVVUklDb21wb25lbnQoX1RQeUpuN1JxbVdwbXc0VjkpOwogICAgfQogICAgaWYgKHR5cGVvZiBfWEY1U3Y5VmZWeGptR05SMyAhPT0gJ3VuZGVmaW5lZCcgJiYgX1hGNVN2OVZmVnhqbUdOUjMgJiYgd2luZG93Ll8yRm5KUUtzMzlHUGoyTHNSLnVuaXF1ZSkgewogICAgICAgIF9ibnh5eHkxcVdMcjFmY1YzICs9ICcmdG9rZW49JyArIGVuY29kZVVSSUNvbXBvbmVudChfWEY1U3Y5VmZWeGptR05SMyk7CiAgICB9CiAgICB2YXIgYSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpOwogICAgICAgIGEudHlwZSA9ICdhcHBsaWNhdGlvbi9qYXZhc2NyaXB0JzsKICAgICAgICBhLnNyYyA9IHdpbmRvdy5fMkZuSlFLczM5R1BqMkxzUi5SX1BBVEggKyBfYm54eXh5MXFXTHIxZmNWMzsKICAgIHZhciBzID0gZG9jdW1lbnQuZ2V0RWxlbWVudHNCeVRhZ05hbWUoJ3NjcmlwdCcpWzBdOwogICAgcy5wYXJlbnROb2RlLmluc2VydEJlZm9yZShhLCBzKQogICAgfSkoKTsKICAgIA=="></script>
+    {% endif %}
+</head>
+<body{% if auth.is_authenticated and auth.account.has_open_deals %} data-watch-messages="1"{% endif %} class="language-{{ LANGUAGE_CODE }}{% if auth.is_authenticated and auth.account.use_dark_theme %} theme-dark{% endif %}">
+	<div class="wrapper">
+		<header class="header">
+			<div class="content header__container">
+                <button class="header__hamburger">
+                    {% include "include/svg/close.html" %}
+                    {% include "include/svg/ham-icon.html" %}
+                </button>
+                <a href="{% url 'core:index_page' %}" class="header__logo"><img src="{% static 'img/logo.svg' %}" alt=""></a>
+                <a href="{% url 'core:index_page' %}" class="header__logo header__logo--dark"><img src="{% static 'img/logo-light.svg' %}" alt=""></a>
+				<div class="header__inner">
+					<nav class="header__menu">
+                        <form action="{% url 'core:search_page' %}" class="header__search">
+                            <input type="text" name="q" value="{{ search_text|default:'' }}" placeholder="Search" required>
+                            <button type="submit">{% include "include/svg/looking-glass.html" %}</button>
+                        </form>
+                        <div class="header__menu__item{% if urltag == 'index' %} active{% endif %} header__menu__item--has-children">
+                            <a href="javascript:void(0)">{% trans "Marketplace" %}</a>
+							<div class="header__menu__children">
+                                <a href="/">{% trans "Offers" %}</a>
+                                <a href="/latest-deals/">{% trans "Latest Deals" %}</a>
+							</div>
+						</div>
+                        <div class="header__menu__item{% if urltag == 'rules' %} active{% endif %} header__menu__item--has-children">
+                            <a href="javascript:void(0)">{% trans "Resources" %}</a>
+							<div class="header__menu__children">
+								<a href="/rules">FAQ</a>
+                                <a href="http://t.me/Fomoripbot" target="_blank">{% trans "Telegram Bot" %}</a>
+                                <a href="https://t.me/fomorip" target="_blank">{% trans "Support" %}</a>
+							</div>
+						</div>
+                            {% if not auth.is_authenticated %}
+                                <button class="btn" data-popup="connect">{% trans "Connect" %}</button>
+                            {% else %}
+                                <button class="btn" data-popup="addOffer">{% trans "Add offer" %}</button>
+		                    {% endif %}
+					</nav>
+					<form action="{% url 'core:search_page' %}" class="header__search">
+						<input type="text" name="q" value="{{ search_text|default:'' }}" placeholder="Search">
+                        <button type="submit">{% include "include/svg/looking-glass.html" %}</button>
+                    </form>
+				</div>
+				<div class="header__profile-container">
+					<div class="fake-select fake-select--network js--hide">
+						<select name="network" class="js-network-select">
+                            <option value="unsupported">Unsupported</option>
+							<option value="bnb">BNB Chain</option>
+							<option value="arbitrum">Arbitrum</option>
+                            <option value="optimism">Optimism</option>
+							<option value="etherium" data-label="soon" disabled>Etherium</option>
+							<option value="polygon" data-label="soon" disabled>Polygon</option>
+							<option value="aurora" data-label="soon" disabled>Aurora</option>
+						<select>
+					</div>
+                    {% if not auth.is_authenticated %}
+                        <button class="btn" data-popup="connect">{% trans "Connect" %}</button>
+                    {% else %}
+                        {% if auth.account.is_profile_filled %}
+                            <button class="btn" data-popup="addOffer">{% trans "Add offer" %}</button>
+                        {% else %}
+                            <button class="js-notify-fill-profile btn">{% trans "Add offer" %}</button>
+                        {% endif %}
+                    {% endif %}
+					<button class="header__mobile-search">
+                        {% include "include/svg/looking-glass.html" %}
+					</button>
+                    {% if auth.is_authenticated %}
+                        <div class="header__notify">
+                            <a href="{% url 'core:notifications' %}">{% include "include/svg/notify.html" %}{% with total_unseen_notifications=auth.account.total_unseen_notifications %}{% if total_unseen_notifications > 0 %}<i class="js-total-unseen-notifications">{{ auth.account.total_unseen_notifications }}</i>{% endif %}{% endwith %}</a>
+                        </div>
+                        <div class="header__profile">
+                            {% include "include/svg/user.html" %}
+                            <div class="header__profile__inner">
+                                <a href="{% url 'core:my_wts_offers' %}">{% include "include/svg/user.html" %} {% trans "My WTS offers" %}</a>
+                                <a href="{% url 'core:my_wtb_requests' %}">{% include "include/svg/user-with-message.html" %} {% trans "My WTB offers" %}</a>
+                                {% with new_count_in_my_deals=auth.account.new_count_in_my_deals %}
+                                <a href="{% url 'core:my_deals_page' %}">{% include "include/svg/deals.html" %} {% trans "Deals" %}{% if new_count_in_my_deals > 0 %} <span>({{ new_count_in_my_deals }})</span>{% endif %}</a>
+                                {% endwith %}
+                                <a href="{% url 'core:favorites_page' %}">{% include "include/svg/heart.html" %} {% trans "Favorites" %}</a>
+                                <a href="{% url 'core:settings_page' %}">{% include "include/svg/settings.html" %} {% trans "Settings" %}</a>
+                                <a href="{% url 'core:logout' %}">{% include "include/svg/logout.html" %} {% trans "Log out" %}</a>
+                            </div>
+                        </div>
+                    {% endif %}
+				</div>
+			</div>
+		</header>
+        <main class="main">{% block main %}{% endblock %}</main>
+		<footer class="footer">
+			<div class="content footer__container">
+                <a href="{% url 'core:index_page' %}" class="footer__logo"><img src="{% static 'img/logo.svg' %}" alt=""></a>
+                <a href="{% url 'core:index_page' %}" class="footer__logo footer__logo--dark"><img src="{% static 'img/logo-light.svg' %}" alt=""></a>
+				<div class="footer__menu">
+                    <div class="footer__menu-title">{% trans "My account" %}</div>
+                    {% if auth.is_authenticated %}
+						<div class="footer__menu-list">
+							<div class="footer__menu-item">
+                                <a href="{% url 'core:my_wts_offers' %}">{% trans "My WTS offers" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="{% url 'core:my_wtb_requests' %}">{% trans "My WTB offers" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="{% url 'core:my_deals_page' %}">{% trans "Deals" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="{% url 'core:favorites_page' %}">{% trans "Favorites" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="{% url 'core:settings_page' %}">{% trans "Settings" %}</a>
+							</div>
+						</div>
+                    {% else %}
+						<div class="footer__menu-list">
+							<div class="footer__menu-item">
+                                <a href="javascript:void(0)" data-popup="connect">{% trans "My WTS offers" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="javascript:void(0)" data-popup="connect">{% trans "My WTB offers" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="javascript:void(0)" data-popup="connect">{% trans "Deals" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="javascript:void(0)" data-popup="connect">{% trans "Favorites" %}</a>
+							</div>
+							<div class="footer__menu-item">
+                                <a href="javascript:void(0)" data-popup="connect">{% trans "Settings" %}</a>
+							</div>
+						</div>
+                    {% endif %}
+				</div>
+				<div class="footer__menu">
+                    <div class="footer__menu-title">{% trans "Marketplace" %}</div>
+					<div class="footer__menu-list">
+						<div class="footer__menu-item">
+                            <a href="/">{% trans "WTS offers" %}</a>
+						</div>
+						{% if auth.is_authenticated %}
+						<div class="footer__menu-item">
+                            <a href="/requests">{% trans "WTB Offers" %}</a>
+						</div>
+                    	{% else %}
+						<div class="footer__menu-item">
+                            <a href="javascript:void(0)" data-popup="connect">{% trans "WTB Offers" %}</a>
+						</div>
+						{% endif %}
+						<div class="footer__menu-item">
+                            <a href="/latest-deals/">{% trans "Latest deals" %}</a>
+						</div>
+					</div>
+				</div>
+				<div class="footer__menu">
+                    <div class="footer__menu-title">{% trans "Resources" %}</div>
+					<div class="footer__menu-list">
+						<div class="footer__menu-item">
+							<a href="/rules/">FAQ</a>
+						</div>
+						<div class="footer__menu-item">
+                            <a href="/contacts/">{% trans "Contacts" %}</a>
+						</div>
+						<div class="footer__menu-item">
+                            <a href="/terms-of-service/">{% trans "Terms of Use" %}</a>
+						</div>
+						<div class="footer__menu-item">
+                            <a href="/privacy-policy/">{% trans "Privacy policy" %}</a>
+						</div>
+					</div>
+				</div>
+				<div class="footer__buttons">
+					<div class="footer__buttons-row">
+                        <div class="footer__buttons-title">{% trans "Follow us" %}</div>
+						<div class="footer__buttons-list">
+							<div class="footer__buttons-item footer__buttons-item--social"><a href="https://twitter.com/fomorip" target="_blank">{% include "include/svg/social-twitter.html" %}</a></div>
+							<div class="footer__buttons-item footer__buttons-item--social"><a href="https://medium.com/@fomorip" target="_blank">{% include "include/svg/social-medium.html" %}</a></div>
+							<div class="footer__buttons-item footer__buttons-item--social"><a href="https://www.youtube.com/channel/UCN0E4wWVXJF_qPwP5f_-QdA" target="_blank">{% include "include/svg/social-youtube.html" %}</a></div>
+							<div class="footer__buttons-item footer__buttons-item--social"><a href="https://t.me/fomoripnews" target="_blank">{% include "include/svg/social-telegram.html" %}</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<div class="copyright">
+			<div class="content footer__container">
+				<div class="copyright__item">© FOMO.RIP, All Rights reserved.</div>
+			</div>
+		</div>
+		<div class="fixed-buttons">
+			<div class="fixed-buttons__list">
+				<div class="fixed-buttons__item fixed-buttons__item--up"><a href="javascript:void(0)" class="js-scroll-to-top">{% include "include/svg/arrow-up.html" %}</a></div>
+				<div class="fixed-buttons__item fixed-buttons__item--message"><a href="https://t.me/fomorip" target="_blank">{% include "include/svg/message.html" %}</a></div>
+			</div>
+		</div>
+	</div>
+    {% if not auth.is_authenticated %}
+	<div class="popup" id="connect">
+        <form id="id-auth-form" method="post">
+            {% csrf_token %}
+            <p class="popup__caption">{% trans "Connection" %}</p>
+            <p class="popup__subcaption">{% trans "Please connect your wallet" %}</p>
+            <button class="btn-metamask js-signin-metamask">
+                <img src="{% static 'img/metamask.svg' %}" class="metamask-logo" alt="">
+                <img src="{% static 'img/metamask-dark.svg' %}" class="metamask-logo metamask-logo--dark" alt="">
+            </button>
+            <p class="popup__hint">
+                {% trans "After clicking, you will be redirected to a third-party resource. Please follow the instructions." %}
+            </p>
+        </form>
+	</div>
+    {% else %}
+        {% include 'include/popup-add-offer.html' %}
+    {% endif %}
+    {% include 'include/popup-success.html' %}
+    {% if not is_tutorial_shown %}
+	<div class="popup _block-close" id="tutorial">
+		<div class="steps">
+			<div class="step active">
+                <img src="{% static 'img/step-img_1.svg' %}" alt="">
+                <p class="step-progress">{% trans "Step" %} 1/4</p>
+                <p class="step-caption">{% trans "Forget about FOMO" %}</p>
+                <p class="step-text">{% trans "Welcome to Fomo.rip - the first OTC marketplace where you can buy a whitelist spot to participate in the popular NFT mint or sell your allocation on Coinlist project" %}</p>
+			</div>
+			<div class="step">
+				<img src="{% static 'img/step-img_2.svg' %}" alt="">
+                <p class="step-progress">{% trans "Step" %} 2/4</p>
+                <p class="step-caption">{% trans "Fill out a profile" %}</p>
+                <p class="step-text">{% trans "Fill in all the fields in your profile settings - this is necessary to publish offers and make deals with sellers." %}</p>
+			</div>
+			<div class="step">
+				<img src="{% static 'img/step-img_3.svg' %}" alt="">
+                <p class="step-progress">{% trans "Step" %} 3/4</p>
+                <p class="step-caption">{% trans "No scam" %}</p>
+                <p class="step-text">{% trans "All deals are protected by a smart contract. No one gets the money until all sides of the deal are happy." %}</p>
+			</div>
+			<div class="step">
+				<img src="{% static 'img/step-img_4.svg' %}" alt="">
+                <p class="step-progress">{% trans "Step" %} 4/4</p>
+                <p class="step-caption">{% trans "Get in on the deals" %}</p>
+                <p class="step-text">{% trans "You can be both as a buyer and as a seller. Publish your offers and buy new gems from other users - it's just your choice how to make a profit." %}</p>
+			</div>
+			<div class="steps__nav">
+                <button class="btn btn_blue-transparent skip">{% trans "Skip" %}</button>
+                <button class="btn next">{% trans "Next" %}</button>
+			</div>
+		</div>
+	</div>
+    {% endif %}
+    {% block extra_popups %}{% endblock %}
+    <div class="js-load-spinner lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    <script src="{% static 'js/app-9e914dcd0376e33d837fa81121dd49e2.js' %}"></script>
+    <script>
+    {% if messages %}
+        window.messagesDjango = [{% for message in messages %}{'tags': '{{ message.tags|capfirst }}', 'message': '{{ message }}'},{% endfor %}]
+    {% endif %}
+        window.debugMode = {% if settings.DEBUG %}true{% else %}false{% endif %}
+    </script>
+</body>
+</html>

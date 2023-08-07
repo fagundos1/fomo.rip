@@ -1,0 +1,27 @@
+{% load core_tags i18n %}
+<div class="popup popup--make-offer" id="make-offer">
+    <p class="popup__caption">{{ account }} {% trans "Offers" %}</p>
+    {% with offers=account.sale_offers.active %}
+    {% if offers|length > 0 %}
+    <form action="{% url 'core:make_offer_for_wtb_request' %}" method="POST" class="popup__offers">
+        {% csrf_token %}
+        <input class="js-wtb-request-pk" type="hidden" name="wtb_request" value=""/>
+        <div class="popup__offers-wrap">
+            {% for offer in offers %}
+            <label for="{{ offer.pk }}" class="popup__offers-item">
+                <input type="radio" name="offer" value="{{ offer.pk }}" id="{{ offer.pk }}" class="js-radio-make-offer" required>
+                <div class="popup__offers-title">{{ offer }}</div>
+                <div class="popup__offers-price">{{ offer.price|priceformat }}$</div>
+            </label>
+            {% endfor %}
+        </div>
+        <button type="submit" class="popup__offers-button btn">{% trans "Choose" %}</button>
+    </form>
+    {% else %}
+    <div class="popup__success">
+        <div class="popup__success-icon">{% include "include/svg/empty-offer.html" %}</div>
+        <div class="popup__success-text">{% trans "Sorry! There are no current offers." %}</div>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>

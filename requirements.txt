@@ -1,0 +1,8 @@
+Django
+bleach
+psycopg2-binary
+django-grappelli
+pillow
+sorl-thumbnail
+web3
+gunicorn
