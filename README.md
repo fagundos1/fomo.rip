@@ -7,7 +7,6 @@ Before you begin, ensure you have the following installed:
 
 You can find installation instructions at https://docs.docker.com/engine/install/.
 
-Getting Started
 Follow these steps to get your project up and running.
 
 # Development Setup
