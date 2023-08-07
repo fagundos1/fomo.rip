@@ -21,6 +21,6 @@ Create a copy of the .env.example file and name it .env. Update the environment 
 
 Build the Docker containers and start the development server:
 
-    docker-compose -f docker-compose.dev.yml up -d --build
+    docker-compose -f docker-compose.yaml up -d --build
 
 Access the application at http://localhost:8000.
