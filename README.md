@@ -14,8 +14,8 @@ Follow these steps to get your project up and running.
 
 Clone this repository to your local machine:
 
-    git clone https://github.com/yourusername/your-django-docker-project.git
-    cd your-django-docker-project
+    git clone https://github.com/fagundos1/fomo.rip
+    cd fomo.rip
 
 Create a copy of the .env.example file and name it .env. Update the environment variables as needed.
 
